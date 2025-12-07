@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Giỏ hàng - HAYKHANGOI</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="header.css">
+    <link rel="stylesheet" href="footer.css">
+    <link rel="stylesheet" href="body.css">
+    <link rel="stylesheet" href="trangchu.css">
+    
+    <style>
+        .cart-wrapper { max-width: 1000px; margin: 120px auto 60px; padding: 0 20px; }
+        .cart-table { width: 100%; border-collapse: collapse; background: #1e293b; border-radius: 12px; overflow: hidden; margin-bottom: 30px; }
+        .cart-table th, .cart-table td { padding: 20px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.05); color: white; }
+        .cart-table th { background: #0f172a; color: #94a3b8; font-size: 14px; text-transform: uppercase; }
+        .cart-item-img { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 1px solid #334155; }
+        .btn-remove { background: transparent; border: none; color: #ef4444; cursor: pointer; font-size: 18px; transition: 0.3s; }
+        .btn-remove:hover { transform: scale(1.2); }
+        .cart-summary { background: #1e293b; padding: 30px; border-radius: 12px; text-align: right; border: 1px solid rgba(255,255,255,0.05); }
+        .total-price { font-size: 32px; font-weight: bold; color: #10b981; margin: 10px 0 20px; }
+        .btn-checkout-action { padding: 15px 40px; background: linear-gradient(45deg, #4f46e5, #ec4899); color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4); }
+        .btn-checkout-action:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(79, 70, 229, 0.6); }
+        
+        /* CSS Modal */
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); backdrop-filter: blur(5px); align-items: center; justify-content: center; }
+        .modal-content { background-color: #1e293b; border-radius: 16px; width: 90%; max-width: 450px; border: 1px solid #334155; animation: modalSlideIn 0.3s ease-out; position: relative; padding: 30px; }
+        @keyframes modalSlideIn { from { transform: translateY(-50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+        @keyframes loadingBar { from { width: 0%; } to { width: 100%; } }
+    </style>
+</head>
+<body>
+
+    <div id="header-placeholder"></div>
+
+    <div class="cart-wrapper">
+        <h2 style="color: white; margin-bottom: 30px; border-left: 5px solid #4f46e5; padding-left: 15px;">GIỎ HÀNG CỦA BẠN</h2>
+        
+        <table class="cart-table">
+            <thead>
+                <tr>
+                    <th style="width: 100px;">Hình ảnh</th>
+                    <th>Sản phẩm</th>
+                    <th>Giá tiền</th>
+                    <th style="width: 50px;">Xóa</th>
+                </tr>
+            </thead>
+            <tbody id="cart-items-body"></tbody>
+        </table>
+
+        <div class="cart-summary">
+            <div style="color: #94a3b8; font-size: 14px;">TỔNG TIỀN THANH TOÁN</div>
+            <div class="total-price" id="total-price">0đ</div>
+            <button class="btn-checkout-action" id="btn-checkout-action" onclick="checkout()">
+                <i class="fas fa-credit-card"></i> THANH TOÁN & NHẬN ACC
+            </button>
+        </div>
+    </div>
+
+    <div id="footer-placeholder"></div>
+    
+    <div id="payment-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            
+            <div id="payment-modal-body">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h3 style="color: #10b981; margin: 0; font-size: 20px;">THANH TOÁN CHUYỂN KHOẢN</h3>
+                    <span style="font-size: 30px; cursor: pointer; color: #64748b;" onclick="closePaymentModal()">&times;</span>
+                </div>
+                
+                <div style="background: #fff; padding: 15px; border-radius: 12px; display: inline-block; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 20px; text-align: center; width: 100%; box-sizing: border-box;">
+                    <img id="qr-code-img" src="" alt="QR Code" style="width: 100%; max-width: 250px; height: auto; display: block; margin: 0 auto;">
+                </div>
+
+                <div style="text-align: left; background: #0f172a; padding: 20px; border-radius: 8px; border: 1px solid #334155;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                        <span style="color: #94a3b8;">Số tiền:</span>
+                        <strong id="pay-amount" style="color: #facc15; font-size: 18px;">0đ</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="color: #94a3b8;">Nội dung CK:</span>
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <strong id="pay-content" style="color: #fff; font-size: 18px; background: #10b981; padding: 2px 8px; border-radius: 4px;">...</strong>
+                            <i class="far fa-copy" style="color: #cbd5e1; cursor: pointer;" onclick="copyContent()" title="Sao chép"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 25px; text-align: center;">
+                    <p style="color: #4f46e5; font-weight: bold; animation: pulse 1.5s infinite;">Đang chờ Admin duyệt...</p>
+                    <p style="font-size: 13px; color: #64748b; margin: 0;">Vui lòng giữ nguyên màn hình này.</p>
+                </div>
+            </div>
+
+            <div id="success-modal-body" style="display: none; text-align: center; padding: 10px;">
+                <div style="width: 80px; height: 80px; background: rgba(16, 185, 129, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+                    <i class="fas fa-check" style="font-size: 40px; color: #10b981;"></i>
+                </div>
+                
+                <h3 style="color: #10b981; margin-bottom: 10px; font-size: 20px; text-transform: uppercase; line-height: 1.4;">
+                    THANH TOÁN THÀNH CÔNG<br>VÀ NHẬN LƯỢT QUAY
+                </h3>
+                
+                <p id="success-msg" style="color: #cbd5e1; margin-bottom: 20px; font-size: 15px; line-height: 1.6;">
+                    Đang cập nhật quà tặng...
+                </p>
+
+                <div style="width: 100%; height: 4px; background: #334155; border-radius: 2px; overflow: hidden;">
+                    <div style="width: 100%; height: 100%; background: #10b981; animation: loadingBar 4s linear;"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    
+    <script src="js/header.js"></script>
+    <script src="js/footer.js"></script>
+    
+    <script>
+        window.onload = function() {
+            const user = localStorage.getItem('currentUser');
+            const loginBtn = document.querySelector('.btn-login-nav');
+            if (user && loginBtn) {
+                if (typeof updateHeaderCartCount === 'function') updateHeaderCartCount(); 
+                loginBtn.innerHTML = `<i class="fas fa-user-circle"></i> ${user}`;
+                loginBtn.style.backgroundColor = '#10b981';
+                loginBtn.href = "#";
+            }
+        }
+    </script>
+    
+    <script type="module" src="shop.js"></script>
+</body>
+</html>

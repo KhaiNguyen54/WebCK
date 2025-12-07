@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tin tức Liên Quân - HAYKHANGOI</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="header.css">
+    <link rel="stylesheet" href="footer.css">
+    <link rel="stylesheet" href="body.css">
+    <link rel="stylesheet" href="trangchu.css">
+    
+    <style>
+        .hero-slider {
+            position: relative;
+            width: 100%;
+            height: 60vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            z-index: 1;
+        }
+
+        .slide.active {
+            opacity: 1;
+            z-index: 2;
+        }
+
+        .slider-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.7);
+            z-index: 3;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 15px;
+            color: white;
+        }
+
+        .main-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin: 10px 0;
+            text-transform: uppercase;
+        }
+
+        .sub-title {
+            font-size: 1.5rem;
+            color: #10b981;
+            font-weight: 600;
+            letter-spacing: 2px;
+        }
+
+        .hero-desc {
+            font-size: 1.2rem;
+            color: #e2e8f0;
+            margin-top: 10px;
+        }
+
+        .intro-text {
+            background: rgba(30, 41, 59, 0.5);
+            padding: 40px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #e2e8f0;
+            line-height: 1.8;
+            font-size: 1.1rem;
+            margin-top: 40px;
+        }
+
+        .intro-text h3 {
+            color: #10b981;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .intro-text p {
+            margin-bottom: 20px;
+        }
+
+        .intro-text .features {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        .intro-text .features p {
+            margin: 10px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="header-placeholder"></div>
+
+    <section class="hero-slider">
+        <div class="slide active" data-interval="9000" style="background-image: url('hinhanh/lienquan.gif');"></div>
+        <div class="slider-overlay"></div>
+
+        <div class="hero-content">
+            <h2 class="sub-title">TIN TỨC</h2>
+            <h1 class="main-title"><span class="highlight">MÙA GIẢI MỚI</span></h1>
+            <p class="hero-desc">QUANG MINH & HẮC ÁM</p>
+        </div>
+    </section>
+
+    <div class="container">
+        <div class="section-header">
+            <h2>MÙA GIẢI MỚI QUANG MINH & HẮC ÁM<br> ĐÃ CHÍNH THỨC ĐƯỢC CẬP NHẬT</h2>
+            <div class="divider"></div>
+        </div>
+
+        <div class="intro-text">
+            <img src="hinhanh/lienquanquangminhhacam.jpg" width="1125px">
+            <p>
+                Phiên bản <strong>Quang Minh & Hắc Ám</strong> chính thức cập nhật vào ngày 22.10.2025 đem tới nhiều trải nghiệm mới trên chiến trường cùng những tính năng độc đáo.
+            </p>
+            <p>
+                Để trải nghiệm tốt nhất phiên bản mới của Liên Quân Mobile, truy cập <a href="shop.html?game=lienquan" target="_blank">Shop Liên Quân</a> để mua sắm những tài khoản Liên Quân Xịn, Săn Skin Siêu Hiếm Đẳng Cấp Bậc SSS.
+
+            </p>
+        </div>
+    </div>
+
+    <div id="footer-placeholder"></div>
+    <script src="js/header.js"></script>
+    <script src="js/footer.js"></script>
+    <script type="module" src="config.js"></script>
+    <script src="shop.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const user = localStorage.getItem('currentUser');
+            const loginBtn = document.querySelector('.btn-login-nav');
+    
+            if (user && loginBtn) {
+                loginBtn.innerHTML = `<i class="fas fa-user-circle"></i> ${user}`;
+                loginBtn.style.backgroundColor = '#10b981';
+                loginBtn.href = "#";
+    
+                loginBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if (confirm('Bạn có muốn đăng xuất không?')) {
+                        localStorage.removeItem('currentUser'); 
+                        location.reload(); 
+                    }
+                });
+            }
+
+            const slides = document.querySelectorAll('.slide');
+            let currentSlide = 0;
+            let slideTimer;
+
+            function nextSlide() {
+                slides[currentSlide].classList.remove('active');
+                currentSlide = (currentSlide + 1) % slides.length;
+                slides[currentSlide].classList.add('active');
+
+                let duration = parseInt(slides[currentSlide].getAttribute('data-interval'));
+                if (isNaN(duration)) duration = 5000;
+
+                clearTimeout(slideTimer);
+                slideTimer = setTimeout(nextSlide, duration);
+            }
+
+            let firstDuration = parseInt(slides[0].getAttribute('data-interval'));
+            if (isNaN(firstDuration)) firstDuration = 5000;
+            
+            slideTimer = setTimeout(nextSlide, firstDuration);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Liên hệ hỗ trợ - HAYKHANGOI</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="header.css">
+    <link rel="stylesheet" href="footer.css">
+    <link rel="stylesheet" href="body.css">
+    <link rel="stylesheet" href="trangchu.css">
+    
+    <style>
+        body {
+            background-color: #0b0e14;
+            color: #cbd5e1;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .breadcrumb {
+            max-width: 1000px;
+            margin: 100px auto 10px;
+            padding: 0 20px;
+            font-size: 14px;
+            color: #94a3b8;
+        }
+        .breadcrumb a { color: #94a3b8; text-decoration: none; }
+        .breadcrumb span { margin: 0 5px; }
+
+        .article-container {
+            max-width: 800px;
+            margin: 0 auto 60px;
+            background: #0f172a;
+            border: 1px solid #1e293b;
+            border-radius: 8px;
+            padding: 40px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        .page-title {
+            text-align: center;
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 40px;
+            text-transform: uppercase;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 20px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            background: #1e293b;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: 0.3s;
+        }
+
+        .contact-item:hover {
+            transform: translateX(5px);
+            border-color: #4f46e5;
+            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.1);
+        }
+
+        .icon-box {
+            width: 60px;
+            height: 60px;
+            background: rgba(79, 70, 229, 0.1);
+            color: #4f46e5;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+
+        .info-content h3 {
+            margin: 0 0 5px 0;
+            color: white;
+            font-size: 16px;
+        }
+
+        .info-content p {
+            margin: 0;
+            color: #94a3b8;
+            font-size: 16px;
+        }
+
+        .info-content a {
+            color: #94a3b8;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+
+        .info-content a:hover {
+            color: #4f46e5;
+        }
+        .social-section {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #334155;
+        }
+
+        .social-section h3 {
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .big-social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .big-social-icons a {
+            width: 50px;
+            height: 50px;
+            background: #334155;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            text-decoration: none;
+            font-size: 20px;
+            transition: 0.3s;
+        }
+
+        .big-social-icons a:hover {
+            background: #4f46e5;
+            transform: translateY(-5px);
+        }
+        .floating-buttons {
+            position: fixed; bottom: 20px; right: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 1000;
+        }
+        .float-btn {
+            width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 24px; text-decoration: none; box-shadow: 0 4px 10px rgba(0,0,0,0.3); transition: 0.3s;
+        }
+        .btn-up { background: #f43f5e; }
+        .btn-discord { background: #5865F2; }
+        .btn-mess { background: #0084ff; }
+        .float-btn:hover { transform: scale(1.1); }
+        
+        footer {
+            margin-top: auto;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="header-placeholder"></div>
+
+    <div class="breadcrumb">
+        <a href="index.html">Trang chủ</a> <span>›</span> 
+        <span>Liên hệ hỗ trợ</span>
+    </div>
+
+    <div class="article-container">
+        
+        <h1 class="page-title">THÔNG TIN LIÊN HỆ</h1>
+        
+        <div class="contact-item">
+            <div class="icon-box">
+                <i class="fas fa-map-marker-alt"></i>
+            </div>
+            <div class="info-content">
+                <h3>Địa chỉ văn phòng</h3>
+                <p>120 An Liễng, Hà Nội</p>
+            </div>
+        </div>
+
+        <div class="contact-item">
+            <div class="icon-box">
+                <i class="fas fa-envelope"></i>
+            </div>
+            <div class="info-content">
+                <h3>Email hỗ trợ</h3>
+                <p><a href="mailto:vu_a_vu@gmail.com">vu_a_vu@gmail.com</a></p>
+            </div>
+        </div>
+
+        <div class="contact-item">
+            <div class="icon-box">
+                <i class="fas fa-phone-alt"></i>
+            </div>
+            <div class="info-content">
+                <h3>Hotline 24/7 (Khi gọi sẽ có nhân viên hỏi bạn "Alo, Vũ à Vũ")</h3>
+                <p><a href="tel:03618363636">036.1836.3636</a></p>
+            </div>
+        </div>
+
+        <div class="social-section">
+            <h3>Kết nối với chúng tôi</h3>
+            <div class="big-social-icons">
+                <a href="https://www.facebook.com/MixiGaming" target="_blank" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://www.tiktok.com/@mixigaming" target="_blank" title="TikTok"><i class="fab fa-tiktok"></i></a>
+                <a href="https://www.youtube.com/@MixiGaming3con" target="_blank" title="Youtube"><i class="fab fa-youtube"></i></a>
+                <a href="https://discord.com/invite/mixigaming" target="_blank" title="Discord"><i class="fab fa-discord"></i></a>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="footer-placeholder"></div>
+    <script src="js/header.js"></script>
+    <script src="js/footer.js"></script>
+    <script type="module" src="config.js"></script>
+    <script src="shop.js"></script>
+    <div class="floating-buttons">
+        <a href="https://discord.com/invite/mixigaming" class="float-btn btn-discord"><i class="fab fa-discord"></i></a>
+        <a href="https://www.facebook.com/MixiGaming" class="float-btn btn-mess"><i class="fab fa-facebook-messenger"></i></a>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const user = localStorage.getItem('currentUser');
+            const loginBtn = document.querySelector('.btn-login-nav');
+    
+            if (user && loginBtn) {
+                loginBtn.innerHTML = `<i class="fas fa-user-circle"></i> ${user}`;
+                loginBtn.style.backgroundColor = '#10b981';
+                loginBtn.href = "#";
+    
+                loginBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if (confirm('Bạn có muốn đăng xuất không?')) {
+                        localStorage.removeItem('currentUser'); 
+                        location.reload(); 
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

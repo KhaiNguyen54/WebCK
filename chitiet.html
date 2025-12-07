@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chi tiết tài khoản - HAYKHANGOI</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="header.css">
+    <link rel="stylesheet" href="footer.css">
+    <link rel="stylesheet" href="body.css">
+    <link rel="stylesheet" href="trangchu.css">
+
+    <style>
+        .detail-container {
+            max-width: 1100px;
+            margin: 120px auto 60px;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 40px;
+        }
+
+        /* Gallery Ảnh */
+        .gallery-box {
+            background: #1e293b;
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .main-img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover; /* Hoặc contain nếu muốn thấy full ảnh */
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #334155;
+            background: #000;
+        }
+        .thumb-list {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+        }
+        .thumb-img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 6px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            opacity: 0.7;
+            transition: 0.3s;
+        }
+        .thumb-img:hover, .thumb-img.active {
+            border-color: #10b981;
+            opacity: 1;
+        }
+
+        /* Thông tin Acc */
+        .info-box {
+            color: white;
+        }
+        .acc-code {
+            color: #94a3b8;
+            font-size: 14px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+        .acc-title {
+            font-size: 32px;
+            font-weight: 800;
+            margin: 0 0 15px 0;
+            line-height: 1.3;
+        }
+        .acc-price {
+            font-size: 28px;
+            color: #facc15; /* Vàng */
+            font-weight: bold;
+            margin-bottom: 25px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 20px;
+        }
+
+        .attr-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        .attr-item {
+            background: #0f172a;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            font-size: 14px;
+        }
+        .attr-item span { color: #94a3b8; display: block; margin-bottom: 5px; font-size: 12px; }
+        .attr-item strong { color: #10b981; font-size: 15px; }
+
+        .desc-box {
+            background: rgba(255,255,255,0.03);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            line-height: 1.6;
+            color: #cbd5e1;
+            font-size: 15px;
+        }
+
+        .action-btns {
+            display: flex;
+            gap: 15px;
+        }
+        .btn-add-cart, .btn-buy-now {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: 0.3s;
+        }
+        .btn-add-cart {
+            background: #334155;
+            color: white;
+        }
+        .btn-add-cart:hover { background: #475569; }
+
+        .btn-buy-now {
+            background: linear-gradient(45deg, #ef4444, #f43f5e);
+            color: white;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+        }
+        .btn-buy-now:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(239, 68, 68, 0.6); }
+        
+        /* Trạng thái đã bán */
+        .sold-badge {
+            display: inline-block;
+            background: #ef4444;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-weight: bold;
+            margin-left: 10px;
+            font-size: 14px;
+            vertical-align: middle;
+        }
+
+        @media (max-width: 768px) {
+            .detail-container { grid-template-columns: 1fr; }
+            .main-img { height: 250px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="header-placeholder"></div>
+
+    <div class="detail-container">
+        <div class="gallery-box">
+            <img id="main-display-img" src="hinhanh/loading.gif" class="main-img" onerror="this.src='hinhanh/logo.png'">
+            <div class="thumb-list" id="thumb-list">
+                </div>
+        </div>
+
+        <div class="info-box">
+            <div class="acc-code">Mã số: <span id="detail-id">...</span> <span id="sold-status"></span></div>
+            <h1 class="acc-title" id="detail-title">Đang tải thông tin...</h1>
+            <div class="acc-price" id="detail-price">...</div>
+
+            <div class="attr-grid">
+                <div class="attr-item">
+                    <span><i class="fas fa-gamepad"></i> Game</span>
+                    <strong id="detail-game">...</strong>
+                </div>
+                <div class="attr-item">
+                    <span><i class="fas fa-crown"></i> Rank/Cấp độ</span>
+                    <strong id="detail-rank">...</strong>
+                </div>
+                <div class="attr-item">
+                    <span><i class="fas fa-layer-group"></i> Skin/Tướng</span>
+                    <strong id="detail-skin">...</strong>
+                </div>
+                <div class="attr-item">
+                    <span><i class="fas fa-shield-alt"></i> Bảo hành</span>
+                    <strong>Trọn đời</strong>
+                </div>
+            </div>
+
+            <div class="desc-box">
+                <h4 style="margin-top: 0; color: white;">Mô tả chi tiết:</h4>
+                <p id="detail-desc">...</p>
+            </div>
+
+            <div class="action-btns" id="action-buttons-box">
+                <button class="btn-add-cart" onclick="currentAddToCart()">
+                    <i class="fas fa-cart-plus"></i> Thêm giỏ hàng
+                </button>
+                <button class="btn-buy-now" onclick="currentBuyNow()">
+                    <i class="fas fa-bolt"></i> Mua ngay
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="footer-placeholder"></div>
+
+    <script src="js/header.js"></script>
+    <script src="js/footer.js"></script>
+    
+    <script type="module">
+        import { db, ref, onValue } from './js/config.js';
+
+        let currentProduct = null;
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const id = urlParams.get('id');
+            const game = urlParams.get('game'); // Lấy loại game từ URL
+
+            if (!id) {
+                alert("Không tìm thấy sản phẩm!");
+                window.location.href = "shop.html";
+                return;
+            }
+
+            // Nếu URL có 'game', tìm trực tiếp trong folder game đó cho nhanh
+            let path = 'products';
+            if(game) path = `products/${game}`;
+
+            onValue(ref(db, path), (snapshot) => {
+                const data = snapshot.val();
+                if(!data) return showNotFound();
+
+                // Tìm sản phẩm trong data tải về
+                let product = null;
+
+                // Nếu path là 'products/game' (đã biết game)
+                if(game && Array.isArray(data)) {
+                    // Lưu lại index để dùng cho giỏ hàng
+                    const foundIndex = data.findIndex(p => p.id == id);
+                    if(foundIndex !== -1) {
+                        product = {
+                            ...data[foundIndex],
+                            category: game,
+                            dbIndex: foundIndex
+                        };
+                    }
+                } 
+                // Nếu không biết game (tìm trong toàn bộ)
+                else if (!game) {
+                    Object.keys(data).forEach(key => {
+                        if(Array.isArray(data[key])) {
+                            const foundIndex = data[key].findIndex(p => p.id == id);
+                            if(foundIndex !== -1) {
+                                product = {
+                                    ...data[key][foundIndex],
+                                    category: key,
+                                    dbIndex: foundIndex
+                                };
+                            }
+                        }
+                    });
+                }
+
+                if (product) {
+                    currentProduct = product;
+                    renderDetail(product);
+                } else {
+                    showNotFound();
+                }
+            });
+        });
+
+        function showNotFound() {
+            document.getElementById('detail-title').innerText = "Sản phẩm không tồn tại hoặc đã bị xóa.";
+            document.getElementById('action-buttons-box').style.display = 'none';
+        }
+
+        function renderDetail(p) {
+            // Điền thông tin
+            document.getElementById('detail-id').innerText = "#" + p.id;
+            document.getElementById('detail-title').innerText = p.title;
+            document.getElementById('detail-price').innerText = new Intl.NumberFormat('vi-VN').format(p.price) + 'đ';
+            document.getElementById('detail-game').innerText = (p.category || 'Game').toUpperCase();
+            document.getElementById('detail-rank').innerText = p.rank;
+            document.getElementById('detail-skin').innerText = p.skin;
+            document.getElementById('detail-desc').innerText = p.desc || "Acc ngon giá rẻ, uy tín, bảo mật cao.";
+
+            // Ảnh chính
+            const mainImg = document.getElementById('main-display-img');
+            mainImg.src = p.img || 'hinhanh/logo.png';
+
+            // Ảnh phụ (Gallery)
+            const thumbList = document.getElementById('thumb-list');
+            thumbList.innerHTML = '';
+            
+            let images = [p.img];
+            if (p.more_images && Array.isArray(p.more_images)) {
+                images = images.concat(p.more_images);
+            }
+
+            images.forEach((imgSrc, index) => {
+                if(imgSrc) {
+                    const img = document.createElement('img');
+                    img.src = imgSrc;
+                    img.className = `thumb-img ${index === 0 ? 'active' : ''}`;
+                    // Sự kiện click đổi ảnh
+                    img.onclick = function() {
+                        mainImg.src = this.src;
+                        document.querySelectorAll('.thumb-img').forEach(el => el.classList.remove('active'));
+                        this.classList.add('active');
+                    };
+                    thumbList.appendChild(img);
+                }
+            });
+
+            // Kiểm tra trạng thái Đã bán
+            if (p.status === 'sold') {
+                document.getElementById('sold-status').innerHTML = '<span class="sold-badge">ĐÃ BÁN</span>';
+                const btns = document.getElementById('action-buttons-box');
+                btns.innerHTML = `<button style="width:100%;padding:15px;background:#64748b;color:white;border:none;border-radius:8px;font-weight:bold;cursor:not-allowed">SẢN PHẨM NÀY ĐÃ HẾT HÀNG</button>`;
+            }
+        }
+
+        // Định nghĩa hàm thêm giỏ hàng riêng cho trang này
+        window.currentAddToCart = function() {
+            if(!currentProduct) return;
+            if(currentProduct.status === 'sold') return alert("Hàng đã bán!");
+
+            let cart = JSON.parse(localStorage.getItem('user_cart')) || [];
+            if (cart.some(item => item.id == currentProduct.id)) {
+                return alert("Sản phẩm này đã có trong giỏ hàng!");
+            }
+
+            cart.push(currentProduct);
+            localStorage.setItem('user_cart', JSON.stringify(cart));
+            
+            // Cập nhật số lượng trên header (nếu có hàm)
+            if(typeof window.updateHeaderCartCount === 'function') {
+                window.updateHeaderCartCount();
+            }
+            alert("✅ Đã thêm vào giỏ hàng!");
+        };
+
+        window.currentBuyNow = function() {
+            if(!currentProduct) return;
+            window.currentAddToCart();
+            window.location.href = "giohang.html";
+        };
+    </script>
+</body>
+</html>

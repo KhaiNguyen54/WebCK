@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lịch sử đơn hàng - HAYKHANGOI</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="header.css">
+    <link rel="stylesheet" href="footer.css">
+    <link rel="stylesheet" href="body.css">
+    <link rel="stylesheet" href="trangchu.css">
+
+    <style>
+        .history-container {
+            max-width: 1200px;
+            margin: 120px auto 60px;
+            padding: 0 20px;
+            min-height: 60vh;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #1e293b;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.05);
+            margin-top: 20px;
+        }
+
+        .data-table th, .data-table td {
+            padding: 18px 20px;
+            text-align: left;
+            color: #cbd5e1;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .data-table th {
+            background: #0f172a;
+            color: #94a3b8;
+            text-transform: uppercase;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .copy-btn {
+            background: #334155;
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-left: 10px;
+            transition: 0.2s;
+        }
+        .copy-btn:hover { background: #10b981; }
+
+        .empty-state {
+            text-align: center;
+            padding: 50px;
+            color: #64748b;
+        }
+        .empty-state i { font-size: 40px; margin-bottom: 15px; display: block; }
+    </style>
+</head>
+<body>
+
+    <div id="header-placeholder"></div>
+
+    <div class="history-container">
+        <h2 style="color: white; margin-bottom: 20px; border-left: 5px solid #4f46e5; padding-left: 15px;">LỊCH SỬ MUA TÀI KHOẢN</h2>
+        <p style="color: #94a3b8; font-size: 14px; margin-bottom: 30px;">
+            <i class="fas fa-info-circle"></i> Chỉ hiển thị các đơn hàng đã được Admin duyệt thành công.
+        </p>
+
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Mã đơn</th>
+                    <th>Tên sản phẩm</th>
+                    <th>Thông tin tài khoản (Acc|Pass)</th>
+                    <th>Giá tiền</th>
+                    <th>Thời gian duyệt</th>
+                </tr>
+            </thead>
+            <tbody id="buy-list">
+                </tbody>
+        </table>
+    </div>
+
+    <div id="footer-placeholder"></div>
+
+    <script src="js/header.js"></script>
+    <script src="js/footer.js"></script>
+    
+    <script type="module">
+        import { db, ref, onValue } from './js/config.js';
+
+        window.copyText = (text) => {
+            navigator.clipboard.writeText(text).then(() => alert('Đã sao chép: ' + text));
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const user = localStorage.getItem('currentUser');
+            if (!user) {
+                alert("Vui lòng đăng nhập để xem lịch sử!");
+                window.location.href = "taikhoan.html";
+                return;
+            }
+
+            const buyContainer = document.getElementById('buy-list');
+            buyContainer.innerHTML = '<tr><td colspan="5" style="text-align:center">Đang tải dữ liệu...</td></tr>';
+
+            // Lấy dữ liệu từ nhánh 'orders/completed' trên Firebase
+            onValue(ref(db, 'orders/completed'), (snapshot) => {
+                const data = snapshot.val();
+                buyContainer.innerHTML = ''; 
+
+                if (!data) {
+                    buyContainer.innerHTML = `<tr><td colspan="5" class="empty-state"><i class="fas fa-box-open"></i>Bạn chưa mua tài khoản nào</td></tr>`;
+                    return;
+                }
+
+                // Lọc đơn hàng của user hiện tại
+                const myOrders = Object.values(data).filter(order => order.user === user).reverse();
+
+                if (myOrders.length === 0) {
+                    buyContainer.innerHTML = `<tr><td colspan="5" class="empty-state"><i class="fas fa-box-open"></i>Bạn chưa mua tài khoản nào</td></tr>`;
+                } else {
+                    myOrders.forEach(order => {
+                        if(order.cart && Array.isArray(order.cart)) {
+                            order.cart.forEach(item => {
+                                // Hiển thị Acc|Pass. Nếu chưa có thông tin credentials (do code cũ) thì hiện "Liên hệ Admin"
+                                const accInfo = item.credentials || "Liên hệ Admin nhận Acc";
+                                
+                                buyContainer.innerHTML += `
+                                    <tr>
+                                        <td style="color:#10b981; font-weight:bold;">${order.code}</td>
+                                        <td>${item.title}</td>
+                                        <td>
+                                            <div style="display:flex; align-items:center; gap:10px;">
+                                                <span style="color:#facc15; background:#334155; padding:5px 10px; border-radius:4px; font-family:monospace;">
+                                                    ${accInfo}
+                                                </span>
+                                                <button class="copy-btn" onclick="copyText('${accInfo}')"><i class="far fa-copy"></i></button>
+                                            </div>
+                                        </td>
+                                        <td style="color:#f43f5e; font-weight:bold;">${parseInt(item.price).toLocaleString()}đ</td>
+                                        <td style="color:#94a3b8; font-size:13px;">${order.approvedAt || order.time}</td>
+                                    </tr>
+                                `;
+                            });
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

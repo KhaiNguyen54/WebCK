@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vòng quay lửa chùa - HAYKHANGOI</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="header.css">
+    <link rel="stylesheet" href="footer.css">
+    <link rel="stylesheet" href="body.css">
+    <link rel="stylesheet" href="trangchu.css">
+    
+    <style>
+        /* CSS Vòng quay giữ nguyên */
+        .hero-slider { position: relative; width: 100%; height: 60vh; overflow: hidden; display: flex; justify-content: center; align-items: center; }
+        .slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; opacity: 0; transition: opacity 1s ease-in-out; z-index: 1; }
+        .slide.active { opacity: 1; z-index: 2; }
+        .slider-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.7); z-index: 3; }
+        .hero-content { position: relative; z-index: 10; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 0 15px; color: white; }
+        .main-title { font-size: 3.5rem; font-weight: 800; margin: 10px 0; text-transform: uppercase; }
+        .sub-title { font-size: 1.5rem; color: #10b981; font-weight: 600; letter-spacing: 2px; }
+        .hero-desc { font-size: 1.2rem; color: #e2e8f0; margin-top: 10px; }
+
+        .lucky-wheel-section { position: relative; padding: 60px 20px; background: url('hinhanh/background.jpg') center/cover no-repeat; display: flex; flex-direction: column; align-items: center; overflow: hidden; color: white; }
+        .lucky-wheel-section::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.9); z-index: 0; }
+        .wheel-wrapper { position: relative; z-index: 5; display: flex; flex-direction: column; align-items: center; gap: 30px; }
+        .wheel-title h2 { font-size: 2.5rem; color: white; text-transform: uppercase; text-align: center; text-shadow: 0 0 10px #d946ef, 0 0 20px #d946ef; margin-bottom: 5px; }
+        .wheel-title p { color: #cbd5e1; font-size: 1.1rem; text-align: center;}
+        
+        .wheel-container { position: relative; width: 450px; height: 450px; display: flex; justify-content: center; align-items: center; }
+        .wheel-border { position: absolute; width: 100%; height: 100%; border-radius: 50%; border: 10px solid #1e293b; box-shadow: 0 0 20px #a855f7, inset 0 0 20px #a855f7; z-index: 1; pointer-events: none; }
+        .marker { position: absolute; top: -20px; left: 50%; transform: translateX(-50%); width: 40px; height: 50px; z-index: 20; filter: drop-shadow(0 0 5px #facc15); }
+        .marker::after { content: ''; position: absolute; top: 0; left: 0; border-left: 20px solid transparent; border-right: 20px solid transparent; border-top: 40px solid #facc15; }
+        .wheel { width: 100%; height: 100%; border-radius: 50%; background: #1e293b; position: relative; overflow: hidden; transition: transform 5s cubic-bezier(0.25, 0.1, 0.25, 1); border: 5px solid #fff; }
+        .wheel-bg { width: 100%; height: 100%; position: absolute; top: 0; left: 0; border-radius: 50%; background: conic-gradient( #ef4444 0deg 45deg, #3b82f6 45deg 90deg, #10b981 90deg 135deg, #f59e0b 135deg 180deg, #8b5cf6 180deg 225deg, #ec4899 225deg 270deg, #06b6d4 270deg 315deg, #6366f1 315deg 360deg ); }
+        .wheel-lines { width: 100%; height: 100%; position: absolute; top: 0; left: 0; }
+        .line { position: absolute; top: 0; left: 50%; width: 2px; height: 50%; background: rgba(255,255,255,0.5); transform-origin: 50% 100%; }
+        .wheel-items { width: 100%; height: 100%; position: absolute; top: 0; left: 0; }
+        .wheel-item { position: absolute; top: 50%; left: 50%; transform-origin: 0 0; display: flex; align-items: center; justify-content: flex-end; width: 50%; height: 0px; }
+        .item-content { transform: rotate(90deg) translate(0, -10px); text-align: center; width: 120px; margin-left: 60px; }
+        .item-content i { font-size: 24px; color: white; display: block; margin-bottom: 5px; text-shadow: 0 2px 2px rgba(0,0,0,0.5); }
+        .item-content span { font-size: 12px; font-weight: bold; color: white; text-transform: uppercase; text-shadow: 0 2px 2px rgba(0,0,0,0.5); }
+        .w-1 { transform: rotate(22.5deg); } .w-2 { transform: rotate(67.5deg); } .w-3 { transform: rotate(112.5deg); } .w-4 { transform: rotate(157.5deg); }
+        .w-5 { transform: rotate(202.5deg); } .w-6 { transform: rotate(247.5deg); } .w-7 { transform: rotate(292.5deg); } .w-8 { transform: rotate(337.5deg); }
+
+        .spin-btn { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80px; height: 80px; background: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; border: 5px solid rgba(255,255,255,0.5); box-shadow: 0 0 15px white; background: radial-gradient(circle, #facc15, #ca8a04); cursor: pointer; z-index: 10; transition: 0.2s; }
+        .spin-btn:active { transform: translate(-50%, -50%) scale(0.95); }
+        .spin-btn span { font-weight: 900; color: #422006; font-size: 18px; }
+
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 200; display: none; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
+        .modal-content { background: #1e293b; padding: 40px; border-radius: 16px; text-align: center; border: 2px solid #10b981; box-shadow: 0 0 40px rgba(16, 185, 129, 0.4); animation: popIn 0.3s ease; color: white; max-width: 400px; }
+        .modal-content h3 { color: #facc15; font-size: 28px; margin-bottom: 15px; text-transform: uppercase; }
+        .modal-content p { font-size: 16px; margin-bottom: 25px; line-height: 1.6; }
+        .close-btn { background: linear-gradient(45deg, #ef4444, #f43f5e); color: white; border: none; padding: 12px 30px; border-radius: 30px; cursor: pointer; font-weight: bold; font-size: 16px; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4); transition: 0.3s; }
+        .close-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(239, 68, 68, 0.6); }
+        @keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        
+        @media (max-width: 600px) { .wheel-container { width: 320px; height: 320px; } .item-content { margin-left: 30px; width: 90px; } }
+
+        .spin-count-box {
+            position: absolute;
+            top: -60px;
+            background: rgba(0,0,0,0.6);
+            padding: 8px 20px;
+            border-radius: 20px;
+            border: 1px solid #10b981;
+            font-size: 18px;
+            font-weight: bold;
+            color: #10b981;
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="header-placeholder"></div>
+
+    <section class="hero-slider">
+        <div class="slide active" data-interval="9000" style="background-image: url('hinhanh/freefire.gif');"></div>
+        <div class="slider-overlay"></div>
+        <div class="hero-content">
+            <h2 class="sub-title">VÒNG QUAY</h2>
+            <h1 class="main-title"><span class="highlight">BOOYAH MAY MẮN</span></h1>
+            <p class="hero-desc">MUA 1 ACC = TẶNG 2 LƯỢT QUAY</p>
+        </div>
+    </section>
+
+    <section class="lucky-wheel-section">
+        <div class="wheel-wrapper">
+            <div class="wheel-title">
+                <h2>Vòng Quay Nhân Phẩm</h2>
+                <p>Thử vận may - Nhận quà ngay!</p>
+            </div>
+
+            <div class="spin-count-box">
+                <i class="fas fa-sync-alt"></i> Lượt quay: <span id="spin-display">Loading...</span>
+            </div>
+
+            <div class="wheel-container">
+                <div class="wheel-border"></div>
+                <div class="marker"></div>
+                
+                <div class="wheel" id="wheel">
+                    <div class="wheel-bg"></div>
+                    <div class="wheel-lines">
+                        <div class="line" style="transform: rotate(0deg)"></div>
+                        <div class="line" style="transform: rotate(45deg)"></div>
+                        <div class="line" style="transform: rotate(90deg)"></div>
+                        <div class="line" style="transform: rotate(135deg)"></div>
+                        <div class="line" style="transform: rotate(180deg)"></div>
+                        <div class="line" style="transform: rotate(225deg)"></div>
+                        <div class="line" style="transform: rotate(270deg)"></div>
+                        <div class="line" style="transform: rotate(315deg)"></div>
+                    </div>
+                    <div class="wheel-items">
+                        <div class="wheel-item w-1"><div class="item-content"><i class="fas fa-gem"></i><span>999 KC</span></div></div>
+                        <div class="wheel-item w-2"><div class="item-content"><i class="fas fa-frown"></i><span>Chúc Bạn May Mắn</span></div></div>
+                        <div class="wheel-item w-3"><div class="item-content"><i class="fas fa-gift"></i><span>Skin Súng</span></div></div>
+                        <div class="wheel-item w-4"><div class="item-content"><i class="fas fa-ticket-alt"></i><span>Voucher 50k</span></div></div>
+                        <div class="wheel-item w-5"><div class="item-content"><i class="fas fa-user-secret"></i><span>Acc Reg</span></div></div>
+                        <div class="wheel-item w-6"><div class="item-content"><i class="fas fa-redo"></i><span>Thêm Lượt</span></div></div>
+                        <div class="wheel-item w-7"><div class="item-content"><i class="fas fa-money-bill-wave"></i><span>Thẻ Garena</span></div></div>
+                        <div class="wheel-item w-8"><div class="item-content"><i class="fas fa-crown"></i><span>Acc VIP</span></div></div>
+                    </div>
+                </div>
+
+                <div class="spin-btn" onclick="spinWheel()">
+                    <span>QUAY</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="modal" id="resultModal">
+        <div class="modal-content">
+            <i id="resultIcon" class="fas fa-trophy fa-3x" style="color: gold; margin-bottom: 20px;"></i>
+            <h3 id="resultTitle">XIN CHÚC MỪNG!</h3>
+            <p id="prizeText">...</p>
+            <button class="close-btn" onclick="closeModal()">Đóng</button>
+        </div>
+    </div>
+
+    <div id="footer-placeholder"></div>
+
+    <script src="js/header.js"></script>
+    <script src="js/footer.js"></script>
+    
+    <script type="module">
+        import { db, ref, get, update, onValue } from './js/config.js';
+        const spinAudio = new Audio('sound/vongquay.mp3'); 
+        const winAudio = new Audio('sound/donate.mp3'); 
+        const loseAudio = new Audio('sound/fail.mp3'); 
+
+        let isSpinning = false;
+        let currentRotation = 0;
+        let mySpins = 0; 
+        
+        const wheel = document.getElementById('wheel');
+        const modal = document.getElementById('resultModal');
+        const prizeText = document.getElementById('prizeText');
+        const resultIcon = document.getElementById('resultIcon');
+        const resultTitle = document.getElementById('resultTitle');
+        const spinDisplay = document.getElementById('spin-display');
+
+        const user = localStorage.getItem('currentUser');
+
+        document.addEventListener("DOMContentLoaded", function() {
+            if (user) {
+                const userRef = ref(db, 'users/' + user);
+                onValue(userRef, (snapshot) => {
+                    const data = snapshot.val();
+                    if(data) {
+                        mySpins = data.spins || 0;
+                        spinDisplay.innerText = mySpins;
+                    }
+                });
+            } else {
+                spinDisplay.innerText = 0;
+            }
+
+            const slides = document.querySelectorAll('.slide');
+            let currentSlide = 0;
+            if(slides.length > 0) {
+                setInterval(() => {
+                    slides[currentSlide].classList.remove('active');
+                    currentSlide = (currentSlide + 1) % slides.length;
+                    slides[currentSlide].classList.add('active');
+                }, 5000);
+            }
+        });
+
+        // --- HÀM QUAY VÒNG ---
+        window.spinWheel = function() {
+            if (isSpinning) return;
+            
+            if (!user) {
+                alert("Vui lòng đăng nhập để quay!");
+                window.location.href = "taikhoan.html";
+                return;
+            }
+
+            if (mySpins <= 0) {
+                alert("Bạn đã hết lượt quay!\nHãy MUA 1 ACC để được tặng thêm 2 lượt quay.");
+                window.location.href = "shop.html";
+                return;
+            }
+
+            const userRef = ref(db, 'users/' + user);
+            update(userRef, { spins: mySpins - 1 }).then(() => {
+                startSpinningAnimation();
+            }).catch(err => {
+                alert("Lỗi kết nối: " + err);
+            });
+        }
+
+        function startSpinningAnimation() {
+            isSpinning = true;
+            
+            // 1. Phát nhạc khi quay
+            spinAudio.currentTime = 0;
+            spinAudio.loop = true; // Lặp lại tiếng tạch tạch
+            spinAudio.play().catch(e => console.log("Chưa tương tác user nên không tự play được"));
+
+            const randomDeg = Math.floor(Math.random() * 360);
+            const totalDeg = 3600 + randomDeg; 
+            currentRotation += totalDeg;
+            wheel.style.transform = `rotate(${currentRotation}deg)`;
+
+            setTimeout(() => {
+                isSpinning = false;
+                
+                // 2. Dừng nhạc quay
+                spinAudio.pause();
+                
+                const actualDeg = currentRotation % 360;
+                const winningIndex = Math.floor((360 - actualDeg) / 45) % 8;
+
+                const itemNames = [
+                    "Thẻ Garena 50k",
+                    "Acc VIP Full Tướng",
+                    "999 KC (Siêu Vip)",
+                    "Chúc Bạn May Mắn Lần Sau",
+                    "Skin Súng Ngẫu Nhiên",
+                    "Voucher Giảm 50k",
+                    "Acc Reg Trắng",
+                    "Thêm 1 Lượt Quay"
+                ];
+
+                const result = itemNames[winningIndex];
+                processResult(result);
+
+            }, 5000);
+        }
+
+        function processResult(text) {
+            if(text === "Thêm 1 Lượt Quay") {
+                const userRef = ref(db, 'users/' + user);
+                get(userRef).then(snap => {
+                   let current = snap.val().spins || 0;
+                   update(userRef, { spins: current + 1 });
+                });
+                
+                // 3. Phát nhạc thắng
+                winAudio.currentTime = 0;
+                winAudio.play();
+
+                resultIcon.className = "fas fa-sync-alt fa-3x";
+                resultIcon.style.color = "#10b981";
+                resultTitle.innerText = "MAY MẮN!";
+                prizeText.innerHTML = `Bạn quay trúng <strong>Thêm 1 Lượt</strong>.<br>Hệ thống đã tự động cộng cho bạn!`;
+            } 
+            else if(text.includes("May Mắn Lần Sau")) {
+                // 4. Phát nhạc thua
+                loseAudio.currentTime = 0;
+                loseAudio.play();
+
+                resultIcon.className = "fas fa-sad-tear fa-3x";
+                resultIcon.style.color = "#94a3b8";
+                resultTitle.innerText = "RẤT TIẾC!";
+                prizeText.innerHTML = `Chúc bạn may mắn lần sau.<br>Mua thêm acc để thử lại nhé!`;
+            }
+            else {
+                // 5. Phát nhạc thắng (quà to)
+                winAudio.currentTime = 0;
+                winAudio.play();
+
+                resultIcon.className = "fas fa-gift fa-3x";
+                resultIcon.style.color = "#facc15";
+                resultTitle.innerText = "XIN CHÚC MỪNG!";
+                prizeText.innerHTML = `
+                    Bạn trúng: <strong style="color: #10b981;">${text}</strong>
+                    <br><br>
+                    <div style="font-size: 13px; color: #cbd5e1;">
+                        Vui lòng chụp màn hình và liên hệ Admin để nhận thưởng.
+                    </div>
+                `;
+            }
+            modal.style.display = 'flex';
+        }
+
+        window.closeModal = () => {
+            modal.style.display = 'none';
+            // Dừng mọi âm thanh khi đóng modal
+            winAudio.pause();
+            loseAudio.pause();
+        }
+        
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+    </script>
+</body>
+</html>

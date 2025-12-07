@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard - HAYKHANGOI</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #0f172a; color: white; margin: 0; display: flex; }
+        .sidebar { width: 250px; background: #1e293b; height: 100vh; position: fixed; border-right: 1px solid rgba(255,255,255,0.1); }
+        .sidebar-header { padding: 20px; font-size: 20px; font-weight: bold; color: #10b981; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px; }
+        .menu-item { padding: 15px 20px; cursor: pointer; color: #cbd5e1; display: flex; align-items: center; gap: 10px; transition: 0.3s; }
+        .menu-item:hover, .menu-item.active { background: #334155; color: #10b981; border-left: 4px solid #10b981; }
+        .main-content { margin-left: 250px; padding: 30px; width: 100%; }
+        .card-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 30px; }
+        .stat-card { background: #1e293b; padding: 25px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); }
+        .stat-card h3 { margin: 0; color: #94a3b8; font-size: 14px; text-transform: uppercase; }
+        .stat-card .val { font-size: 28px; font-weight: bold; color: white; margin-top: 10px; }
+        .admin-panel { background: #1e293b; padding: 30px; border-radius: 12px; margin-bottom: 30px; }
+        .panel-title { font-size: 18px; font-weight: bold; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); color: #10b981; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 15px; }
+        input, select, textarea { width: 100%; padding: 12px; background: #0f172a; border: 1px solid #334155; color: white; border-radius: 8px; outline: none; box-sizing: border-box; }
+        button.btn-add { background: #10b981; color: white; border: none; padding: 12px 30px; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .product-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        .product-table th { text-align: left; padding: 15px; background: #0f172a; color: #94a3b8; }
+        .product-table td { padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .btn-del { background: #ef4444; border: none; color: white; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
+        .btn-logout { position: absolute; bottom: 20px; width: 90%; left: 5%; background: #ef4444; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        input[type="file"] { padding: 10px; background: #334155; color: #cbd5e1; cursor: pointer; }
+        #preview-box { margin-top: 10px; max-width: 150px; max-height: 150px; border-radius: 8px; border: 2px dashed #334155; display: none; object-fit: cover; }
+        #preview-more-box { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+        .mini-thumb { width: 60px; height: 60px; object-fit: cover; border-radius: 4px; border: 1px solid #4f46e5; }
+        .status-select { padding: 5px; border-radius: 4px; background: #0f172a; color: white; border: 1px solid #334155; }
+        .badge-sold { background: #ef4444; color: white; padding: 2px 6px; border-radius: 4px; font-size: 11px; }
+        .badge-avail { background: #10b981; color: white; padding: 2px 6px; border-radius: 4px; font-size: 11px; }
+        .badge-pending { background: #facc15; color: #333; padding: 2px 6px; border-radius: 4px; font-size: 11px; }
+        .btn-approve { background: #4f46e5; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="sidebar-header"><i class="fas fa-user-shield"></i> ADMIN CP</div>
+        <div class="menu-item active" onclick="showSection('products')"><i class="fas fa-gamepad"></i> Quản lý sản phẩm</div>
+        <div class="menu-item" onclick="showSection('orders')"><i class="fas fa-receipt"></i> Quản lý đơn hàng</div> 
+        <div class="menu-item" onclick="showSection('stats')"><i class="fas fa-chart-line"></i> Thống kê</div>
+        <button class="btn-logout" onclick="logout()">Đăng xuất</button>
+    </div>
+
+    <div class="main-content">
+        <div id="stats-section" style="display:none;">
+            <div class="card-grid">
+                <div class="stat-card"><h3>Tổng thành viên</h3><div class="val" id="total-users">Loading...</div></div>
+                <div class="stat-card"><h3>Tổng doanh thu</h3><div class="val" id="total-revenue" style="color: #facc15;">Loading...</div></div>
+                <div class="stat-card"><h3>Acc đang bán</h3><div class="val" id="total-products">Loading...</div></div>
+            </div>
+        </div>
+
+        <div id="products-section">
+            <div class="admin-panel">
+                <div class="panel-title">THÊM TÀI KHOẢN MỚI (Lên Firebase)</div>
+                <div class="form-row">
+                    <div>
+                        <label style="display:block; margin-bottom:5px; color:#94a3b8;">Chọn Game</label>
+                        <select id="p-game">
+                            <option value="lienquan">Liên Quân Mobile</option>
+                            <option value="freefire">Free Fire</option>
+                            <option value="genshin">Genshin Impact</option>
+                            <option value="valorant">Valorant</option>
+                            <option value="fconline">FC Online</option>
+                            <option value="roblox">Roblox</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="display:block; margin-bottom:5px; color:#94a3b8;">Giá tiền (VNĐ)</label>
+                        <input type="number" id="p-price" placeholder="VD: 50000">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div>
+                        <label style="display:block; margin-bottom:5px; color:#94a3b8;">Tiêu đề hiển thị</label>
+                        <input type="text" id="p-title" placeholder="VD: Acc Rank Cao Thủ...">
+                    </div>
+                    <div>
+                        <label style="display:block; margin-bottom:5px; color:#94a3b8;">Thông tin Rank/Cấp</label>
+                        <input type="text" id="p-rank" placeholder="VD: Cao Thủ 10 sao">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div>
+                        <label style="display:block; margin-bottom:5px; color:#94a3b8;">Skin/Tướng nổi bật</label>
+                        <input type="text" id="p-skin" placeholder="VD: Full Skin Súng">
+                    </div>
+                    <div>
+                        <label style="display:block; margin-bottom:5px; color:#94a3b8;">Dữ liệu (TK|MK) - Gửi cho khách</label>
+                        <input type="text" id="p-cred" placeholder="VD: tai_khoan | mat_khau">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div>
+                        <label style="display:block; margin-bottom:5px; color:#94a3b8;">Ảnh đại diện (1 ảnh)</label>
+                        <input type="file" id="p-img-file" accept="image/*" onchange="previewImage(this)">
+                        <img id="preview-box" src="" alt="Preview">
+                    </div>
+                    <div>
+                        <label style="display:block; margin-bottom:5px; color:#94a3b8;">Ảnh chi tiết (Chọn nhiều ảnh)</label>
+                        <input type="file" id="p-more-imgs-file" multiple accept="image/*" onchange="previewMoreImages(this)">
+                        <div id="preview-more-box"></div>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 15px;">
+                    <label style="display:block; margin-bottom:5px; color:#94a3b8;">Mô tả chi tiết</label>
+                    <textarea id="p-desc" rows="4" placeholder="Mô tả chi tiết về acc..."></textarea>
+                </div>
+
+                <button class="btn-add" onclick="addProduct()">ĐĂNG BÁN LÊN SERVER</button>
+            </div>
+
+            <div class="admin-panel">
+                <div class="panel-title">KHO HÀNG TRỰC TUYẾN</div>
+                <table class="product-table">
+                    <thead><tr><th>ID</th><th>Game</th><th>Tiêu đề</th><th>Giá</th><th>Trạng thái</th><th>Hành động</th></tr></thead>
+                    <tbody id="admin-product-list"></tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div id="orders-section" style="display:none;">
+            <div class="admin-panel">
+                <div class="panel-title">ĐƠN HÀNG CHỜ DUYỆT</div>
+                <table class="product-table">
+                    <thead>
+                        <tr>
+                            <th>Mã đơn</th>
+                            <th>User</th>
+                            <th>Tổng tiền</th>
+                            <th>Số Acc</th>
+                            <th>Thời gian</th>
+                            <th>Trạng thái</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-order-list"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { db, ref, set, get, onValue, child, remove, update } from './js/config.js';
+
+        let currentBase64Image = ""; 
+        let currentMoreBase64Images = [];
+
+        const user = localStorage.getItem('currentUser');
+        const accounts = JSON.parse(localStorage.getItem('list_accounts')) || [];
+        const currentUserData = accounts.find(acc => acc.username === user);
+        
+        if(!currentUserData || currentUserData.role !== 'admin') {
+            alert('Bạn không có quyền truy cập Admin!'); 
+            window.location.href = 'index.html';
+        }
+
+        window.previewImage = (input) => {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('preview-box').src = e.target.result;
+                    document.getElementById('preview-box').style.display = 'block';
+                    currentBase64Image = e.target.result;
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        window.previewMoreImages = (input) => {
+            const previewBox = document.getElementById('preview-more-box');
+            previewBox.innerHTML = '';
+            currentMoreBase64Images = [];
+            if (input.files && input.files.length > 0) {
+                Array.from(input.files).forEach(file => {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        currentMoreBase64Images.push(e.target.result);
+                        const img = document.createElement('img');
+                        img.src = e.target.result;
+                        img.className = 'mini-thumb';
+                        previewBox.appendChild(img);
+                    }
+                    reader.readAsDataURL(file);
+                });
+            }
+        }
+
+        window.showSection = (id) => {
+            document.getElementById('stats-section').style.display = 'none';
+            document.getElementById('products-section').style.display = 'none';
+            document.getElementById('orders-section').style.display = 'none'; 
+            document.getElementById(id + '-section').style.display = 'block';
+            document.querySelectorAll('.menu-item').forEach(el => el.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            
+            if(id === 'products') renderAdminProducts();
+            if(id === 'orders') renderAdminOrders();
+            if(id === 'stats') loadStats();
+        }
+        
+        function renderAdminProducts() {
+            const tbody = document.getElementById('admin-product-list');
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center">Đang tải dữ liệu từ Firebase...</td></tr>';
+
+            onValue(ref(db, 'products'), (snapshot) => {
+                const data = snapshot.val();
+                tbody.innerHTML = '';
+                
+                if(!data) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center">Kho hàng trống</td></tr>'; return; }
+
+                let count = 0;
+                Object.keys(data).forEach(game => {
+                    if(Array.isArray(data[game])) {
+                        data[game].forEach((p, index) => {
+                            count++;
+                            const statusBadge = p.status === 'sold' 
+                                ? `<span class="badge-sold">Đã bán</span>` 
+                                : `<span class="badge-avail">Sẵn sàng</span>`;
+                            
+                            tbody.innerHTML += `
+                                <tr>
+                                    <td style="color:#10b981">#${p.id}</td>
+                                    <td>${game.toUpperCase()}</td>
+                                    <td>${p.title}</td>
+                                    <td>${parseInt(p.price).toLocaleString()}đ</td>
+                                    <td>${statusBadge}</td>
+                                    <td>
+                                        <button class="btn-del" onclick="window.deleteProduct('${game}', ${index})"><i class="fas fa-trash"></i></button>
+                                        <button class="btn-del" style="background:#3b82f6" onclick="window.toggleStatus('${game}', ${index}, '${p.status}')"><i class="fas fa-sync"></i></button>
+                                    </td>
+                                </tr>`;
+                        });
+                    }
+                });
+                // Khi load danh sách sản phẩm xong thì update luôn thống kê
+                loadStats();
+            });
+        }
+        
+        window.addProduct = async () => {
+            const game = document.getElementById('p-game').value;
+            const price = parseInt(document.getElementById('p-price').value);
+            const title = document.getElementById('p-title').value;
+            const rank = document.getElementById('p-rank').value;
+            const skin = document.getElementById('p-skin').value;
+            const cred = document.getElementById('p-cred').value;
+            const desc = document.getElementById('p-desc').value;
+
+            if(!price || !title || !cred) return alert("Vui lòng nhập đủ thông tin!");
+
+            const newId = game.substring(0,2).toUpperCase() + Math.floor(Math.random()*100000);
+            
+            let finalImg = currentBase64Image;
+            if(!finalImg) finalImg = `hinhanh/${game}.jpg`;
+
+            const newProd = {
+                id: newId, price: price, title: title, rank: rank, skin: skin,
+                img: finalImg, credentials: cred, desc: desc,
+                more_images: currentMoreBase64Images, status: 'available' 
+            };
+
+            const btn = document.querySelector('.btn-add');
+            const oldText = btn.innerText;
+            btn.innerText = "Đang đẩy lên Server...";
+            btn.disabled = true;
+
+            const dbRef = ref(db);
+            get(child(dbRef, `products/${game}`)).then((snapshot) => {
+                let currentList = snapshot.val();
+                if (!Array.isArray(currentList)) currentList = [];
+                currentList.push(newProd);
+                set(ref(db, `products/${game}`), currentList)
+                    .then(() => { 
+                        alert("✅ Đăng bán thành công!"); 
+                        resetForm(); 
+                        loadStats(); // Cập nhật thống kê ngay
+                    })
+                    .catch(e => alert("Lỗi Firebase: " + e))
+                    .finally(() => { btn.innerText = oldText; btn.disabled = false; });
+            });
+        }
+
+        window.deleteProduct = (game, index) => {
+            if(confirm("Xác nhận xóa acc này?")) {
+                const dbRef = ref(db);
+                get(child(dbRef, `products/${game}`)).then((snapshot) => {
+                    let list = snapshot.val();
+                    if(list && list.length > index) {
+                        list.splice(index, 1);
+                        set(ref(db, `products/${game}`), list).then(() => loadStats());
+                    }
+                });
+            }
+        }
+
+        window.toggleStatus = (game, index, currentStatus) => {
+            const newStatus = currentStatus === 'sold' ? 'available' : 'sold';
+            const dbRef = ref(db);
+            get(child(dbRef, `products/${game}`)).then((snapshot) => {
+                let list = snapshot.val();
+                if(list && list.length > index) {
+                    list[index].status = newStatus;
+                    set(ref(db, `products/${game}`), list).then(() => loadStats());
+                }
+            });
+        }
+        
+        function renderAdminOrders() {
+            const tbody = document.getElementById('admin-order-list');
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align:center">Đang tải danh sách đơn hàng...</td></tr>';
+            
+            onValue(ref(db, 'orders/pending'), (snapshot) => {
+                const orders = snapshot.val();
+                tbody.innerHTML = '';
+                if (!orders) { tbody.innerHTML = '<tr><td colspan="7" style="text-align:center">Không có đơn hàng chờ duyệt.</td></tr>'; return; }
+
+                Object.keys(orders).forEach(orderKey => {
+                    const o = orders[orderKey];
+                    const accCount = o.cart ? o.cart.length : 0;
+                    const totalPrice = o.amount ? o.amount.toLocaleString() : 'N/A';
+                    
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${o.code}</td>
+                            <td>${o.user}</td>
+                            <td>${totalPrice}đ</td>
+                            <td>${accCount}</td>
+                            <td>${o.time}</td>
+                            <td><span class="badge-pending">Chờ CK</span></td>
+                            <td>
+                                <button class="btn-approve" 
+                                    onclick="window.approveOrder('${orderKey}', '${o.user}')">
+                                    <i class="fas fa-check"></i> DUYỆT & GIAO ACC
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            });
+        }
+        
+        // --- HÀM DUYỆT ĐƠN (Phiên bản ID chuẩn + Auto Update Stats) ---
+        window.approveOrder = async (orderKey, usernameRaw) => {
+            const username = String(usernameRaw).toLowerCase().trim();
+
+            if (!confirm(`Xác nhận DUYỆT đơn hàng ${orderKey} của [${username}]?`)) return;
+
+            try {
+                // 1. Lấy thông tin đơn hàng
+                const pendingRef = ref(db, 'orders/pending/' + orderKey);
+                const snapshot = await get(pendingRef);
+                const order = snapshot.val();
+
+                if (!order) {
+                    alert("❌ Lỗi: Không tìm thấy đơn hàng này (có thể đã bị xóa).");
+                    return;
+                }
+
+                const accCount = (order.cart && Array.isArray(order.cart)) ? order.cart.length : 0;
+                const bonusSpins = accCount * 2;
+
+                // 2. Update Sold (Tìm theo ID)
+                if (order.cart && Array.isArray(order.cart)) {
+                    const updatePromises = []; 
+                    for (const item of order.cart) {
+                        if (item.category && item.id) {
+                            const gameRef = ref(db, `products/${item.category}`);
+                            const gameSnapshot = await get(gameRef);
+                            const productList = gameSnapshot.val();
+
+                            if (productList && Array.isArray(productList)) {
+                                const realIndex = productList.findIndex(p => p.id === item.id);
+                                if (realIndex !== -1) {
+                                    const path = `products/${item.category}/${realIndex}/status`;
+                                    updatePromises.push(set(ref(db, path), 'sold'));
+                                }
+                            }
+                        }
+                    }
+                    await Promise.all(updatePromises);
+                }
+
+                // 3. Cộng lượt quay
+                const userRef = ref(db, 'users/' + username);
+                const userSnap = await get(userRef);
+                
+                let currentSpins = 0;
+                if (userSnap.exists()) {
+                    currentSpins = parseInt(userSnap.val().spins) || 0;
+                }
+                const newSpins = currentSpins + bonusSpins;
+                await update(userRef, { spins: newSpins });
+
+                // 4. Chuyển sang Completed
+                order.approvedAt = new Date().toLocaleString('vi-VN');
+                order.status = 'completed';
+                order.notifyClient = true;
+
+                const completedRef = ref(db, 'orders/completed/' + orderKey);
+                await set(completedRef, order);
+                await remove(pendingRef);
+
+                alert(`✅ DUYỆT THÀNH CÔNG!\n- User: ${username}\n- Đã cộng: ${bonusSpins} lượt quay`);
+                renderAdminOrders();
+                loadStats(); // Cập nhật doanh thu ngay
+
+            } catch (err) {
+                console.error(err);
+                alert("❌ CÓ LỖI XẢY RA: " + err.message);
+            }
+        }
+
+        function resetForm() {
+            document.querySelectorAll('input, textarea').forEach(el => el.value = '');
+            document.getElementById('preview-box').style.display = 'none';
+            document.getElementById('preview-box').src = "";
+            document.getElementById('preview-more-box').innerHTML = "";
+            currentBase64Image = "";
+            currentMoreBase64Images = [];
+        }
+
+        window.logout = () => {
+            localStorage.removeItem('currentUser');
+            window.location.href = 'index.html';
+        }
+
+        // --- HÀM THỐNG KÊ (Updated) ---
+        async function loadStats() {
+            try {
+                // 1. Tổng User thật
+                const usersSnap = await get(ref(db, 'users'));
+                const users = usersSnap.val() || {};
+                document.getElementById('total-users').innerText = Object.keys(users).length;
+
+                // 2. Tổng Doanh thu thật (từ đơn hoàn thành)
+                const ordersSnap = await get(ref(db, 'orders/completed'));
+                const orders = ordersSnap.val() || {};
+                let totalRevenue = 0;
+                Object.values(orders).forEach(order => {
+                    if (order.amount) totalRevenue += parseInt(order.amount);
+                });
+                document.getElementById('total-revenue').innerText = totalRevenue.toLocaleString() + 'đ';
+                
+                // 3. Đếm Acc ĐANG BÁN (Chỉ tính status != 'sold')
+                const productsSnap = await get(ref(db, 'products'));
+                const products = productsSnap.val() || {};
+                let count = 0;
+                Object.values(products).forEach(gameList => {
+                    if (Array.isArray(gameList)) {
+                        // Chỉ đếm những acc CHƯA BÁN
+                        count += gameList.filter(p => p.status !== 'sold').length;
+                    }
+                });
+                document.getElementById('total-products').innerText = count;
+
+            } catch (err) {
+                console.error("Lỗi loadStats:", err);
+            }
+        }
+
+        renderAdminProducts();
+        loadStats(); // Load lần đầu khi vào trang
+    </script>
+</body>
+</html>

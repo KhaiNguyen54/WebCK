@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cửa Hàng - HAYKHANGOI</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="header.css">
+    <link rel="stylesheet" href="footer.css">
+    <link rel="stylesheet" href="body.css">
+    <link rel="stylesheet" href="trangchu.css">
+    
+    <style>
+        .shop-hero {
+            position: relative;
+            height: 350px;
+            width: 100%;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            margin-top: 60px;
+        }
+
+        #hero-img {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            object-fit: cover;
+            z-index: 1;
+            filter: brightness(0.4) blur(2px);
+            transition: 0.5s;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 3;
+        }
+
+        #hero-title {
+            font-size: 48px;
+            font-weight: 900;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            background: linear-gradient(45deg, #fff, #a5b4fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px rgba(79, 70, 229, 0.8);
+        }
+
+        .shop-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 30px;
+            align-items: start;
+        }
+
+        .filter-card {
+            background: #1e293b;
+            border-radius: 12px;
+            padding: 25px;
+            border: 1px solid rgba(255,255,255,0.05);
+            position: sticky;
+            top: 100px;
+        }
+
+        .filter-header h3 {
+            margin: 0 0 20px 0;
+            font-size: 18px;
+            color: white;
+            border-bottom: 2px solid #4f46e5;
+            padding-bottom: 10px;
+            display: inline-block;
+        }
+
+        .filter-group { margin-bottom: 20px; }
+        .filter-group label { display: block; margin-bottom: 8px; font-weight: 600; color: #cbd5e1; font-size: 14px; }
+        
+        .filter-card input, .filter-card select {
+            width: 100%;
+            padding: 12px 15px;
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            color: white;
+            font-size: 14px;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        .btn-filter {
+            width: 100%;
+            padding: 12px;
+            background: #4f46e5;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            text-transform: uppercase;
+        }
+        .btn-filter:hover { background: #4338ca; transform: translateY(-2px); }
+
+        .sort-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            color: #94a3b8;
+            font-size: 14px;
+            background: #1e293b;
+            padding: 10px 20px;
+            border-radius: 8px;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 25px;
+        }
+
+        .product-card {
+            background: #1e293b;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            border-color: #4f46e5;
+        }
+
+        .card-thumb { height: 180px; position: relative; overflow: hidden; }
+        .card-thumb img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
+        .product-card:hover .card-thumb img { transform: scale(1.1); }
+        
+        .id-badge {
+            position: absolute;
+            top: 10px; left: 10px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            z-index: 2;
+        }
+
+        .card-details { padding: 15px; flex-grow: 1; }
+        .card-price { color: #ef4444; font-size: 20px; font-weight: 800; margin-bottom: 5px; }
+        .card-title { color: white; font-size: 16px; font-weight: 700; margin-bottom: 10px; }
+        
+        .card-attributes { list-style: none; padding: 0; margin: 0; font-size: 13px; color: #94a3b8; }
+        .card-attributes li { margin-bottom: 5px; }
+        .card-attributes i { color: #4f46e5; width: 20px; }
+
+        .btn-buy-now {
+            width: 100%;
+            padding: 12px;
+            background: #10b981;
+            color: white;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 0 0 12px 12px;
+            transition: 0.3s;
+        }
+        .btn-buy-now:hover { background: #059669; }
+
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 2000; 
+            left: 0; top: 0;
+            width: 100%; height: 100%; 
+            background-color: rgba(0,0,0,0.8);
+            backdrop-filter: blur(5px);
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content {
+            background-color: #1e293b;
+            border-radius: 16px;
+            width: 90%; max-width: 500px;
+            border: 1px solid #334155;
+            animation: modalSlideIn 0.3s ease-out;
+            position: relative;
+        }
+        @keyframes modalSlideIn { from { transform: translateY(-50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        .close-modal { position: absolute; right: 20px; top: 15px; color: #94a3b8; font-size: 28px; cursor: pointer; }
+        .modal-header { padding: 30px 30px 10px; text-align: center; border-bottom: 1px solid #334155; }
+        
+        .icon-check {
+            width: 70px; height: 70px; background: rgba(16, 185, 129, 0.1); color: #10b981;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 32px; margin: 0 auto 15px;
+        }
+        
+        .modal-body { padding: 20px 30px; }
+        .account-name { text-align: center; color: #4f46e5; margin: 0 0 5px 0; }
+        .price-tag { text-align: center; color: #ef4444; font-size: 28px; font-weight: 800; margin-bottom: 20px; }
+        
+        .account-info-box { background: #0f172a; padding: 15px; border-radius: 8px; border: 1px solid #334155; }
+        .info-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed #334155; font-size: 14px; }
+        .info-row:last-child { border-bottom: none; }
+        .info-row .label { color: #94a3b8; }
+        .info-row .value { color: white; font-weight: 600; }
+
+        .modal-footer { padding: 0 30px 30px; }
+        .btn-confirm-buy {
+            width: 100%; padding: 15px;
+            background: linear-gradient(45deg, #ef4444, #f43f5e);
+            color: white; border: none; border-radius: 8px;
+            font-weight: bold; font-size: 16px; cursor: pointer;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+        }
+        .btn-confirm-buy:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(239, 68, 68, 0.6); }
+
+        @media (max-width: 768px) {
+            .shop-container { grid-template-columns: 1fr; }
+            .filter-card { position: static; margin-bottom: 30px; }
+            .shop-hero { height: 250px; }
+            #hero-title { font-size: 32px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="header-placeholder"></div>
+
+    <section class="shop-hero">
+        <div class="hero-overlay"></div>
+        <img id="hero-img" src="hinhanh/background.jpg" alt="Banner Game">
+        <div class="hero-content">
+            <h1 id="hero-title">KHO TÀI KHOẢN GAME</h1>
+            <p style="color: #cbd5e1; font-size: 18px; margin-top: 10px;">Uy tín - Bảo mật - Giá rẻ nhất thị trường</p>
+        </div>
+    </section>
+
+    <div class="shop-container">
+        
+        <aside class="filter-sidebar">
+            <div class="filter-card">
+                <div class="filter-header">
+                    <h3><i class="fas fa-filter"></i> BỘ LỌC TÌM KIẾM</h3>
+                </div>
+                
+                <div class="filter-group">
+                    <label><i class="fas fa-search"></i> Từ khóa</label>
+                    <input type="text" id="searchInput" placeholder="Tìm mã số, tướng...">
+                </div>
+
+                <div class="filter-group">
+                    <label><i class="fas fa-tag"></i> Khoảng giá</label>
+                    <select id="priceFilter">
+                        <option value="all">Tất cả mức giá</option>
+                        <option value="100000">Dưới 100k</option>
+                        <option value="500000">Dưới 500k</option>
+                        <option value="1000000">Dưới 1 triệu</option>
+                        <option value="5000000">Trên 1 triệu</option>
+                    </select>
+                </div>
+
+                <button class="btn-filter" onclick="applyFilter()">
+                    ÁP DỤNG NGAY
+                </button>
+            </div>
+        </aside>
+
+        <main class="product-area">
+            <div class="sort-bar">
+                <span>Hiển thị danh sách tài khoản</span>
+                <div class="view-mode">
+                    <i class="fas fa-th-large active"></i>
+                </div>
+            </div>
+            
+            <div id="product-grid" class="product-grid">
+            </div>
+        </main>
+    </div>
+
+    <div id="buyModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            
+            <div class="modal-header">
+                <div class="icon-check">
+                    <i class="fas fa-shopping-cart"></i>
+                </div>
+                <h2>XÁC NHẬN MUA HÀNG</h2>
+            </div>
+
+            <div class="modal-body">
+                <h3 id="modalTitle" class="account-name">Tên Acc</h3>
+                <div class="price-tag" id="modalPrice">0đ</div>
+                
+                <div class="account-info-box">
+                    <div class="info-row">
+                        <span class="label"><i class="fas fa-crown"></i> Rank:</span>
+                        <span class="value" id="modalRank">Unknown</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label"><i class="fas fa-layer-group"></i> Skin/Thông tin:</span>
+                        <span class="value" id="modalSkin">Unknown</span>
+                    </div>
+                    <div class="info-row guarantee">
+                        <span class="label"><i class="fas fa-shield-alt"></i> Bảo hành:</span>
+                        <span class="value" style="color: #10b981;">Trọn đời</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button onclick="processBuy()" class="btn-confirm-buy">
+                    <i class="fas fa-bolt"></i> THANH TOÁN NGAY
+                </button>
+                <p style="text-align: center; color: #64748b; font-size: 12px; margin-top: 10px;">
+                    *Vui lòng đăng nhập để hoàn tất giao dịch
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div id="footer-placeholder"></div>
+    <script src="js/header.js"></script>
+    <script src="js/footer.js"></script>
+    <script type="module" src="config.js"></script>
+    <script type="module" src="shop.js"></script>
+    <script>
+        window.onload = function() {
+            if(typeof initShopByUrl === 'function') {
+                initShopByUrl();
+            }
+            
+            const user = localStorage.getItem('currentUser');
+            const loginBtn = document.querySelector('.btn-login-nav');
+            if (user && loginBtn) {
+                let accounts = JSON.parse(localStorage.getItem('list_accounts')) || [];
+                let acc = accounts.find(a => a.username === user);
+                let balance = acc ? (acc.balance || 0) : 0;
+                
+                loginBtn.innerHTML = `<i class="fas fa-user-circle"></i> ${user} (${balance.toLocaleString()}đ)`;
+                loginBtn.style.backgroundColor = '#10b981';
+                loginBtn.href = "#";
+                loginBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if (confirm('Bạn có muốn đăng xuất không?')) {
+                        localStorage.removeItem('currentUser'); 
+                        location.reload(); 
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+</html>

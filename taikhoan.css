@@ -1,0 +1,313 @@
+:root {
+    --primary: #4f46e5;
+    --dark-bg: #0f172a;
+    --card-bg: #1e293b;
+    --text-light: #f8fafc;
+}
+
+body {
+    background-image: url('hinhanh/background.jpg'); 
+    background-size: cover;
+    background-attachment: fixed;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif; 
+    color: var(--text-light);
+}
+
+.glass-nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background: rgba(15, 23, 42, 0.8);
+    backdrop-filter: blur(10px);
+    z-index: 1000;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.nav-menu li a {
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 14px !important;
+    color: white;
+    text-decoration: none;
+}
+
+.btn-login-nav {
+    background: var(--primary);
+    padding: 8px 20px;
+    border-radius: 5px;
+    color: white !important;
+}
+
+.auth-wrapper {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 120px 20px 60px;
+}
+
+.auth-container {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    display: flex;
+    overflow: hidden;
+    max-width: 500px;
+    width: 100%;
+    min-height: 550px;
+    position: relative;
+}
+
+.auth-col {
+    flex: 1;
+    padding: 40px;
+    display: none;
+    flex-direction: column;
+    animation: fadeIn 0.4s ease-in-out;
+}
+
+.auth-col.active {
+    display: flex;
+}
+
+.auth-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.auth-title i {
+    color: #4f46e5;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #555;
+    font-size: 14px;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.form-control {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 15px;
+    transition: all 0.3s;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.form-control:focus {
+    border-color: #4f46e5;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+.btn-auth {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+    transition: opacity 0.3s;
+    margin-top: 10px;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.btn-auth:hover {
+    opacity: 0.9;
+}
+
+.btn-login {
+    background-color: #4f46e5;
+}
+
+.btn-register {
+    background-color: #f59e0b;
+}
+
+.forgot-pass {
+    text-align: right;
+    margin-top: 15px;
+}
+
+.forgot-pass a {
+    color: #666;
+    font-size: 14px;
+    text-decoration: none;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.forgot-pass a:hover {
+    color: #4f46e5;
+}
+
+.toggle-auth {
+    text-align: center;
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+    font-size: 15px;
+    color: #666;
+}
+
+.toggle-auth a {
+    color: var(--primary);
+    font-weight: bold;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.toggle-auth a:hover {
+    text-decoration: underline;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 550px) {
+    .auth-col {
+        padding: 30px 20px;
+    }
+}
+.password-input-group {
+    position: relative;
+    width: 100%;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #94a3b8;
+    z-index: 10;
+    font-size: 16px;
+    transition: 0.3s;
+}
+
+.toggle-password:hover {
+    color: #4f46e5;
+}
+
+.password-input-group input.form-control {
+    padding-right: 45px;
+}
+
+/* UI CHO OTP MODAL */
+.otp-modal {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    z-index: 2000;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(4px);
+}
+
+.otp-content {
+    background: #1e293b;
+    padding: 30px;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+    border: 1px solid #4f46e5;
+    box-shadow: 0 0 30px rgba(79, 70, 229, 0.3);
+    color: white;
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from { transform: translateY(-50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.otp-content h3 {
+    margin: 0 0 15px 0;
+    font-size: 22px;
+    color: white;
+    text-transform: uppercase;
+}
+
+.otp-code-display {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+    font-size: 28px;
+    font-weight: bold;
+    padding: 15px;
+    border-radius: 8px;
+    letter-spacing: 5px;
+    margin: 20px 0;
+    border: 1px dashed #10b981;
+}
+
+.otp-input-field {
+    width: 100%;
+    padding: 15px;
+    text-align: center;
+    font-size: 20px;
+    letter-spacing: 5px;
+    border-radius: 8px;
+    border: 2px solid #334155;
+    background: #0f172a;
+    color: white;
+    margin-bottom: 20px;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.otp-input-field:focus {
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+}
+
+.otp-btn-group {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-confirm-otp {
+    flex: 1;
+    background: #10b981;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.btn-cancel-otp {
+    flex: 1;
+    background: #ef4444;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 16px;
+}

@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HAYKHANGOI - Shop Acc Số 1 HCMUE</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="header.css">
+    <link rel="stylesheet" href="footer.css">
+    <link rel="stylesheet" href="body.css">
+    <link rel="stylesheet" href="trangchu.css">
+    
+    <style>
+        .hero-slider {
+            position: relative;
+            width: 100%;
+            height: 90vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            z-index: 1;
+        }
+
+        .slide.active {
+            opacity: 1;
+            z-index: 2;
+        }
+
+        .slider-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 3;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 15px;
+        }
+
+        .sub-title {
+            font-size: 1.5rem;
+            color: #4ade80;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+            display: inline-block;
+        }
+
+        .main-title {
+            font-size: 4.5rem;
+            line-height: 1.1;
+            font-weight: 900;
+            color: #ffffff;
+            text-transform: uppercase;
+            margin: 0 0 20px 0;
+            text-shadow: 0 4px 10px rgba(0,0,0,0.8);
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .highlight {
+            color: #4ade80;
+        }
+
+        .hero-desc {
+            font-size: 1.2rem;
+            color: #e2e8f0;
+            max-width: 700px;
+            margin: 0 auto 40px auto;
+            line-height: 1.6;
+            font-weight: 500;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+        }
+
+        .btn-explore {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px 45px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: white;
+            background-color: #10b981;
+            border-radius: 50px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
+            border: 2px solid transparent;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-explore:hover {
+            transform: scale(1.05);
+            background-color: transparent;
+            border-color: #10b981;
+            color: #10b981;
+            box-shadow: 0 0 30px rgba(16, 185, 129, 0.8);
+        }
+
+        .btn-explore i {
+            margin-left: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 2.5rem;
+            }
+            .sub-title {
+                font-size: 1rem;
+                letter-spacing: 2px;
+            }
+            .hero-desc {
+                font-size: 1rem;
+                padding: 0 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="header-placeholder"></div>
+    <section class="hero-slider">
+        <div class="slide active" data-interval="9000" style="background-image: url('hinhanh/faker.gif');"></div>
+        <div class="slide" data-interval="3500" style="background-image: url('hinhanh/fifa1.gif');"></div>
+        <div class="slide" data-interval="4000" style="background-image: url('hinhanh/fifa2.gif');"></div>
+        <div class="slide" data-interval="7000" style="background-image: url('hinhanh/genshin.gif');"></div>
+        <div class="slide" data-interval="4500" style="background-image: url('hinhanh/valorant.gif');"></div>
+        <div class="slide" data-interval="3500" style="background-image: url('hinhanh/roblox.gif');"></div>
+        <div class="slide" data-interval="4000" style="background-image: url('hinhanh/freefire.gif');"></div>
+        <div class="slide" data-interval="5000" style="background-image: url('hinhanh/lienquan.gif');"></div>
+        
+        <div class="slider-overlay"></div>
+
+        <div class="hero-content">
+            <h2 class="sub-title">CHÀO MỪNG BẠN ĐẾN VỚI</h2>
+            
+            <h1 class="main-title">
+                HAYKHANGOI <br>
+                <span class="highlight">SHOP ACC SỐ 1 HCMUE</span>
+            </h1>
+            
+            <p class="hero-desc">
+                Nơi quy tụ hàng nghìn tài khoản game chất lượng cao, bảo hành trọn đời. 
+                <br>Uy tín tạo nên thương hiệu.
+            </p>
+            
+            <a href="#games-section" class="btn-explore">
+                KHÁM PHÁ NGAY <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </section>
+
+    <div class="container" id="games-section">
+        <div class="section-header">
+            <h2>DANH MỤC GAME</h2>
+            <div class="divider"></div>
+        </div>
+
+        <div class="game-grid">
+            <a href="shop.html?game=lienquan" target="_blank" class="game-card">
+                <div class="card-image">
+                    <img src="hinhanh/lienquanmobile.jpg" alt="Liên Quân">
+                    <div class="card-overlay">
+                        <span class="play-btn"><i class="fas fa-shopping-cart"></i> MUA NGAY</span>
+                    </div>
+                </div>
+                <div class="card-info">
+                    <h3>Liên Quân Mobile</h3>
+                    <p>1000+ Tài khoản</p>
+                </div>
+            </a>
+
+            <a href="shop.html?game=freefire" target="_blank" class="game-card">
+                <div class="card-image">
+                    <img src="hinhanh/freefire.png" alt="Free Fire">
+                    <div class="card-overlay">
+                        <span class="play-btn"><i class="fas fa-shopping-cart"></i> MUA NGAY</span>
+                    </div>
+                </div>
+                <div class="card-info">
+                    <h3>Free Fire</h3>
+                    <p>500+ Tài khoản</p>
+                </div>
+            </a>
+
+            <a href="shop.html?game=genshin" target="_blank" class="game-card">
+                <div class="card-image">
+                    <img src="hinhanh/genshinimpact.jpg" alt="Genshin">
+                    <div class="card-overlay">
+                        <span class="play-btn"><i class="fas fa-shopping-cart"></i> MUA NGAY</span>
+                    </div>
+                </div>
+                <div class="card-info">
+                    <h3>Genshin Impact</h3>
+                    <p>Reroll & Acc VIP</p>
+                </div>
+            </a>
+
+            <a href="shop.html?game=valorant" target="_blank" class="game-card">
+                <div class="card-image">
+                    <img src="hinhanh/valorant.jpg" alt="Valorant">
+                    <div class="card-overlay">
+                        <span class="play-btn"><i class="fas fa-shopping-cart"></i> MUA NGAY</span>
+                    </div>
+                </div>
+                <div class="card-info">
+                    <h3>Valorant</h3>
+                    <p>Skin limited</p>
+                </div>
+            </a>
+
+             <a href="shop.html?game=fconline" target="_blank" class="game-card">
+                <div class="card-image">
+                    <img src="hinhanh/fconline.jpg" alt="FC Online">
+                    <div class="card-overlay">
+                        <span class="play-btn"><i class="fas fa-shopping-cart"></i> MUA NGAY</span>
+                    </div>
+                </div>
+                <div class="card-info">
+                    <h3>FC Online (FO4)</h3>
+                    <p>Đội hình full ITM +8</p>
+                </div>
+            </a>
+
+            <a href="shop.html?game=roblox" target="_blank" class="game-card">
+                <div class="card-image">
+                    <img src="hinhanh/roblox.jpg" alt="Roblox">
+                    <div class="card-overlay">
+                        <span class="play-btn"><i class="fas fa-shopping-cart"></i> MUA NGAY</span>
+                    </div>
+                </div>
+                <div class="card-info">
+                    <h3>Roblox</h3>
+                    <p>Blox Fruit & More</p>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <div class="container news-section">
+        <div class="section-header">
+            <h2>TIN TỨC MỚI</h2>
+            <div class="divider"></div>
+        </div>
+        <div class="news-grid">
+            
+            <div class="news-item">
+                <a href="https://voting.vieon.vn" target="_blank" class="news-link">
+                    <img src="hinhanh/buitruonglinh.png" alt="News" style="width: 100%; height: 200px; object-fit: cover; object-position: center top; border-radius: 8px 8px 0 0;">
+                    
+                    <div class="news-content">
+                        <h4>Có cơ hội nhận một tài khoản ROBLOX miễn phí!</h4>
+                        <p>Khi truy cập <strong style="color: #4f46e5;">voting.vieon.vn</strong> để bình chọn cho anh trai Buitruonglinh</p>
+                    </div>
+                </a>
+            </div>
+
+            <div class="news-item">
+                <a href="tintuc.html" target="_blank" class="news-link">
+                    <img src="hinhanh/lienquanmobile.jpg" alt="News">
+                    <div class="news-content">
+                        <h4>Cập nhật mùa giải mới</h4>
+                        <p>Danh sách tài khoản Rank Cao Thủ mới nhất...</p>
+                    </div>
+                </a>
+            </div>
+
+            <div class="news-item">
+                <a href="vongquayfreefire.html" target="_blank" class="news-link">
+                    <img src="hinhanh/freefire.png" alt="News">
+                    <div class="news-content">
+                        <h4>Sự kiện vòng quay may mắn</h4>
+                        <p>Cơ hội nhận Acc Free Fire miễn phí...</p>
+                    </div>
+                </a>
+            </div>
+
+        </div>
+    </div> 
+    <div id="footer-placeholder"></div>
+    <script src="js/header.js"></script>
+    <script src="js/footer.js"></script>
+    <script type="module" src="config.js"></script>
+    <script type="module" src="shop.js"></script>
+    <script>
+    document.querySelector('.btn-explore').addEventListener('click', function(e) {
+        e.preventDefault(); 
+        const targetId = this.getAttribute('href'); 
+        const targetSection = document.querySelector(targetId);
+        targetSection.scrollIntoView({ 
+            behavior: 'smooth' 
+        });
+    });
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const slides = document.querySelectorAll('.slide');
+        let currentSlide = 0;
+        let slideTimer;
+
+        function nextSlide() {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (currentSlide + 1) % slides.length;
+            slides[currentSlide].classList.add('active');
+
+            let duration = parseInt(slides[currentSlide].getAttribute('data-interval'));
+            if (isNaN(duration)) duration = 5000;
+
+            clearTimeout(slideTimer);
+            slideTimer = setTimeout(nextSlide, duration);
+        }
+
+        let firstDuration = parseInt(slides[0].getAttribute('data-interval'));
+        if (isNaN(firstDuration)) firstDuration = 5000;
+
+        slideTimer = setTimeout(nextSlide, firstDuration);
+
+        const user = localStorage.getItem('currentUser');
+        const loginBtn = document.querySelector('.btn-login-nav');
+
+        if (user && loginBtn) {
+            let accounts = JSON.parse(localStorage.getItem('list_accounts')) || [];
+            let acc = accounts.find(a => a.username === user);
+            let balance = acc ? (acc.balance || 0) : 0;
+            loginBtn.innerHTML = `<i class="fas fa-user-circle"></i> ${user} (${balance.toLocaleString()}đ)`;
+            loginBtn.style.backgroundColor = '#10b981';
+            loginBtn.href = "#";
+
+            loginBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (confirm('Bạn có muốn đăng xuất không?')) {
+                    localStorage.removeItem('currentUser'); 
+                    location.reload(); 
+                }
+            });
+        }
+        
+        if(typeof updateCartCount === 'function') {
+            updateCartCount();
+        }
+    });
+    </script>
+</body>
+</html>

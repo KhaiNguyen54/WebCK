@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tài khoản (Online) - HAYKHANGOI</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="header.css">
+    <link rel="stylesheet" href="footer.css">
+    <link rel="stylesheet" href="body.css">
+    <link rel="stylesheet" href="taikhoan.css">
+</head>
+
+<body>
+
+    <div id="header-placeholder"></div>
+
+    <div class="auth-wrapper">
+        <div class="auth-container">
+            
+            <div class="auth-col active" id="login-form">
+                <h2 class="auth-title"><i class="fas fa-sign-in-alt"></i> Đăng Nhập</h2>
+                <form onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label>Tên đăng nhập</label>
+                        <input type="text" class="form-control" id="login-username" placeholder="Nhập tên đăng nhập" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Mật khẩu</label>
+                        <div class="password-input-group">
+                            <input type="password" class="form-control" id="login-password" placeholder="Nhập mật khẩu" required>
+                            <i class="fas fa-eye-slash toggle-password" onclick="togglePass(this)"></i>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-auth btn-login" id="btn-login-submit">Đăng nhập</button>
+                    
+                    <div class="forgot-pass" style="display: flex; justify-content: space-between; margin-top: 15px;">
+                        <a href="javascript:void(0)" onclick="switchForm('forgot-user-form')" style="color: #059669;">Quên tên đăng nhập?</a>
+                        <a href="javascript:void(0)" onclick="switchForm('forgot-pass-form')" style="color: #e11d48;">Quên mật khẩu?</a>
+                    </div>
+
+                    <div class="toggle-auth">
+                        Chưa có tài khoản? <a href="javascript:void(0)" onclick="switchForm('register-form')">Đăng ký ngay</a>
+                    </div>
+                </form>
+            </div>
+
+            <div class="auth-col" id="register-form">
+                <h2 class="auth-title"><i class="fas fa-cloud-upload-alt" style="color: #f59e0b;"></i> Đăng Ký Online</h2>
+                <form onsubmit="handleRegister(event)">
+                    <div class="form-group">
+                        <label>Họ và tên</label>
+                        <input type="text" class="form-control" id="reg-fullname" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Tên đăng nhập</label>
+                        <input type="text" class="form-control" id="reg-username" placeholder="Viết thường, không dấu" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" class="form-control" id="reg-email" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Mật khẩu</label>
+                        <div class="password-input-group">
+                            <input type="password" class="form-control" id="reg-password" required>
+                            <i class="fas fa-eye-slash toggle-password" onclick="togglePass(this)"></i>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-auth btn-register" id="btn-reg-submit">Lấy mã xác thực & Đăng ký</button>
+                    <div class="toggle-auth">
+                        Đã có tài khoản? <a href="javascript:void(0)" onclick="switchForm('login-form')">Đăng nhập</a>
+                    </div>
+                </form>
+            </div>
+
+            <div class="auth-col" id="forgot-user-form">
+                <h2 class="auth-title"><i class="fas fa-id-card" style="color: #059669;"></i> Lấy Tên ĐN</h2>
+                <p style="color: #666; font-size: 14px; margin-bottom: 20px;">Nhập email đã đăng ký để hệ thống tìm tên đăng nhập giúp bạn.</p>
+                <form onsubmit="handleForgotUser(event)">
+                    <div class="form-group">
+                        <label>Email đăng ký</label>
+                        <input type="email" class="form-control" id="forgot-user-email" placeholder="Nhập email của bạn" required>
+                    </div>
+                    <button type="submit" class="btn-auth" style="background-color: #059669;" id="btn-forgot-user-submit">Gửi về Email</button>
+                    <div class="toggle-auth">
+                        <a href="javascript:void(0)" onclick="switchForm('login-form')">Quay lại Đăng nhập</a>
+                    </div>
+                </form>
+            </div>
+
+            <div class="auth-col" id="forgot-pass-form">
+                <h2 class="auth-title"><i class="fas fa-key" style="color: #e11d48;"></i> Lấy Mật Khẩu</h2>
+                <form onsubmit="handleForgotPass(event)">
+                    <div class="form-group">
+                        <label>Email đăng ký</label>
+                        <input type="email" class="form-control" id="forgot-pass-email" placeholder="Nhập email tài khoản" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Mật khẩu MỚI</label>
+                        <div class="password-input-group">
+                            <input type="password" class="form-control" id="forgot-new-pass" placeholder="Nhập mật khẩu mới" required>
+                            <i class="fas fa-eye-slash toggle-password" onclick="togglePass(this)"></i>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-auth" style="background-color: #e11d48;" id="btn-forgot-pass-submit">Lấy mã xác thực</button>
+                    <div class="toggle-auth">
+                        <a href="javascript:void(0)" onclick="switchForm('login-form')">Quay lại Đăng nhập</a>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="otp-modal-ui" class="otp-modal">
+        <div class="otp-content">
+            <h3><i class="fas fa-shield-alt"></i> XÁC THỰC OTP</h3>
+            <div style="margin: 20px 0;">
+                <i class="fas fa-envelope-open-text" style="font-size: 50px; color: #10b981; margin-bottom: 15px;"></i>
+                <p style="font-size: 15px; color: #cbd5e1; line-height: 1.5;">
+                    Mã xác thực đã gửi đến email:<br>
+                    <strong id="display-email-dest" style="color: white; font-size: 16px;">...</strong>
+                </p>
+                <p id="backup-otp-msg" style="color: #fbbf24; font-size: 14px; display: none;">
+                    (Mã Test Offline: <span id="backup-otp-code" style="font-weight:bold;"></span>)
+                </p>
+            </div>
+            <input type="number" id="user-otp-input" class="otp-input-field" placeholder="Nhập 6 số OTP">
+            <div class="otp-btn-group">
+                <button type="button" class="btn-cancel-otp" onclick="closeOtpModal()">Hủy bỏ</button>
+                <button type="button" class="btn-confirm-otp" onclick="verifyOtpAction()">Xác nhận</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="footer-placeholder"></div>
+
+    <script src="js/header.js"></script>
+    <script src="js/footer.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
+    <script type="module">
+        import { db, ref, set, get, child, update } from './js/config.js';
+
+        // --- CẤU HÌNH EMAIL ---
+        const OTP_PUBLIC_KEY = "kBR2eplqK_a-pKla_"; 
+        const OTP_SERVICE_ID = "service_mmbvl36"; 
+        const OTP_TEMPLATE_ID = "template_ritqs7u"; 
+
+        try { if(typeof emailjs !== 'undefined') emailjs.init(OTP_PUBLIC_KEY); } catch(e) {}
+
+        // --- BIẾN TOÀN CỤC ---
+        let pendingOtp = "";
+        let pendingAction = null; 
+        let pendingData = null; // Chứa dữ liệu user tạm thời
+
+        function generateOTP() {
+            return Math.floor(100000 + Math.random() * 900000).toString();
+        }
+
+        // --- CÁC HÀM UI ---
+        window.togglePass = function(icon) {
+            const input = icon.previousElementSibling;
+            input.type = input.type === "password" ? "text" : "password";
+            icon.className = input.type === "password" ? "fas fa-eye-slash toggle-password" : "fas fa-eye toggle-password";
+        }
+
+        window.switchForm = function(formId) {
+            document.querySelectorAll('.auth-col').forEach(el => el.classList.remove('active'));
+            document.getElementById(formId).classList.add('active');
+        }
+
+        window.openOtpModal = function(otp, actionType, data, emailDest, isOffline) {
+            pendingOtp = otp;
+            pendingAction = actionType;
+            pendingData = data;
+
+            document.getElementById('display-email-dest').innerText = emailDest;
+            document.getElementById('user-otp-input').value = ""; 
+            document.getElementById('otp-modal-ui').style.display = 'flex';
+            document.getElementById('user-otp-input').focus();
+
+            const backupMsg = document.getElementById('backup-otp-msg');
+            const backupCode = document.getElementById('backup-otp-code');
+            
+            if(isOffline) {
+                backupMsg.style.display = 'block';
+                backupCode.innerText = otp;
+            } else {
+                backupMsg.style.display = 'none';
+            }
+        }
+
+        window.closeOtpModal = function() {
+            document.getElementById('otp-modal-ui').style.display = 'none';
+            pendingOtp = ""; pendingAction = null; pendingData = null;
+        }
+
+        // --- XỬ LÝ XÁC NHẬN OTP (QUAN TRỌNG NHẤT) ---
+        window.verifyOtpAction = function() {
+            const userIn = document.getElementById('user-otp-input').value;
+            if (userIn.toString() === pendingOtp.toString()) {
+                
+                // --- CASE 1: ĐĂNG KÝ TÀI KHOẢN MỚI ---
+                if (pendingAction === 'register') {
+                    const username = pendingData.username;
+                    // Thực hiện lưu vào Firebase sau khi OTP đúng
+                    set(ref(db, 'users/' + username), pendingData.fullUserData)
+                        .then(() => {
+                            alert("✅ Đăng ký thành công! Hãy đăng nhập.");
+                            closeOtpModal();
+                            switchForm('login-form');
+                            // Reset form
+                            document.getElementById('reg-username').value = '';
+                            document.getElementById('reg-password').value = '';
+                            document.getElementById('reg-email').value = '';
+                            document.getElementById('reg-fullname').value = '';
+                        })
+                        .catch(err => alert("Lỗi lưu dữ liệu: " + err));
+                }
+
+                // --- CASE 2: QUÊN MẬT KHẨU ---
+                else if (pendingAction === 'forgot_pass') {
+                    const username = pendingData.username;
+                    const newPassword = pendingData.newPassword;
+                    
+                    update(ref(db, 'users/' + username), { password: newPassword })
+                        .then(() => {
+                            alert('✅ Đổi mật khẩu thành công! Hãy đăng nhập lại.');
+                            closeOtpModal();
+                            switchForm('login-form');
+                            document.getElementById('forgot-pass-email').value = '';
+                            document.getElementById('forgot-new-pass').value = '';
+                        })
+                        .catch(err => alert("Lỗi Update: " + err));
+                }
+                
+            } else {
+                alert("❌ Mã OTP không chính xác!");
+            }
+        }
+
+        // --- 1. XỬ LÝ ĐĂNG KÝ (CÓ OTP) ---
+        window.handleRegister = (e) => {
+            e.preventDefault();
+            const username = document.getElementById('reg-username').value.toLowerCase().trim();
+            const password = document.getElementById('reg-password').value;
+            const fullname = document.getElementById('reg-fullname').value;
+            const email = document.getElementById('reg-email').value;
+            const btn = document.getElementById('btn-reg-submit');
+
+            if (!/^[a-z0-9_]+$/.test(username)) return alert('Tên đăng nhập không dấu, không khoảng cách!');
+            if(password.length < 6) return alert("Mật khẩu phải từ 6 ký tự!");
+
+            const oldText = btn.innerText;
+            btn.innerText = "Đang kiểm tra..."; btn.disabled = true;
+
+            // Kiểm tra trùng tên trước
+            get(child(ref(db), `users/${username}`)).then((snapshot) => {
+                if (snapshot.exists()) {
+                    alert("❌ Tên đăng nhập đã tồn tại!");
+                    btn.innerText = oldText; btn.disabled = false;
+                } else {
+                    // Tên hợp lệ -> Sinh OTP và gửi mail
+                    const otp = generateOTP();
+                    
+                    // Dữ liệu tạm, chưa lưu vào DB vội
+                    const newUserData = {
+                        username, password, fullname, email,
+                        role: 'member', balance: 0, createdAt: new Date().toLocaleString()
+                    };
+
+                    // Gửi Email
+                    if (typeof emailjs !== 'undefined') {
+                        emailjs.send(OTP_SERVICE_ID, OTP_TEMPLATE_ID, {
+                            to_email: email, 
+                            to_name: fullname, 
+                            otp_code: otp, 
+                            message: "Mã OTP xác thực đăng ký tài khoản."
+                        }).then(() => {
+                            // Mở modal, truyền data vào để tí nữa lưu
+                            openOtpModal(otp, 'register', { username: username, fullUserData: newUserData }, email, false);
+                        }).catch(() => {
+                            openOtpModal(otp, 'register', { username: username, fullUserData: newUserData }, email, true); // Fallback Offline
+                        });
+                    } else {
+                        openOtpModal(otp, 'register', { username: username, fullUserData: newUserData }, email, true);
+                    }
+                    
+                    btn.innerText = oldText; btn.disabled = false;
+                }
+            }).catch(err => { alert("Lỗi: " + err); btn.innerText = oldText; btn.disabled = false; });
+        }
+
+        // --- 2. XỬ LÝ ĐĂNG NHẬP ---
+        window.handleLogin = (e) => {
+            e.preventDefault();
+            const username = document.getElementById('login-username').value.toLowerCase().trim();
+            const password = document.getElementById('login-password').value;
+            const btn = document.getElementById('btn-login-submit');
+            const oldText = btn.innerText;
+            btn.innerText = "Đang tải..."; btn.disabled = true;
+
+            get(child(ref(db), `users/${username}`)).then((snapshot) => {
+                if (snapshot.exists()) {
+                    const user = snapshot.val();
+                    if (user.password === password) {
+                        localStorage.setItem('currentUser', user.username);
+                        // Sync LocalStorage
+                        let localAccs = JSON.parse(localStorage.getItem('list_accounts')) || [];
+                        const idx = localAccs.findIndex(a => a.username === user.username);
+                        if(idx !== -1) localAccs[idx] = user; else localAccs.push(user);
+                        localStorage.setItem('list_accounts', JSON.stringify(localAccs));
+
+                        alert(`Chào mừng ${user.fullname}!`);
+                        window.location.href = user.role === 'admin' ? 'admin.html' : 'index.html';
+                    } else {
+                        alert("❌ Sai mật khẩu!");
+                    }
+                } else {
+                    alert("❌ Tài khoản không tồn tại!");
+                }
+            }).finally(() => { btn.innerText = oldText; btn.disabled = false; });
+        }
+
+        // --- 3. QUÊN TÊN ĐĂNG NHẬP ---
+        window.handleForgotUser = (e) => {
+            e.preventDefault();
+            const email = document.getElementById('forgot-user-email').value.trim();
+            const btn = document.getElementById('btn-forgot-user-submit');
+            const oldText = btn.innerText;
+            btn.innerText = "Đang tìm..."; btn.disabled = true;
+
+            get(child(ref(db), 'users')).then((snapshot) => {
+                let foundUser = null;
+                if (snapshot.exists()) {
+                    Object.values(snapshot.val()).forEach(u => { if(u.email === email) foundUser = u; });
+                }
+
+                if (foundUser) {
+                    if (typeof emailjs !== 'undefined') {
+                        emailjs.send(OTP_SERVICE_ID, OTP_TEMPLATE_ID, {
+                            to_email: email, to_name: foundUser.fullname, otp_code: foundUser.username, message: "Tên đăng nhập của bạn."
+                        }).then(() => {
+                            alert(`✅ Đã gửi Tên đăng nhập vào email: ${email}`);
+                            switchForm('login-form');
+                        }).catch(() => alert(`[OFFLINE] Tên đăng nhập là: ${foundUser.username}`));
+                    } else {
+                        alert(`[OFFLINE] Tên đăng nhập là: ${foundUser.username}`);
+                    }
+                } else {
+                    alert("❌ Email này chưa đăng ký!");
+                }
+            }).finally(() => { btn.innerText = oldText; btn.disabled = false; });
+        }
+
+        // --- 4. QUÊN MẬT KHẨU (CÓ OTP) ---
+        window.handleForgotPass = (e) => {
+            e.preventDefault();
+            const email = document.getElementById('forgot-pass-email').value.trim();
+            const newPassword = document.getElementById('forgot-new-pass').value;
+            const btn = document.getElementById('btn-forgot-pass-submit');
+
+            if(newPassword.length < 6) return alert("Mật khẩu mới phải từ 6 ký tự!");
+            
+            const oldText = btn.innerText;
+            btn.innerText = "Đang xử lý..."; btn.disabled = true;
+
+            get(child(ref(db), 'users')).then((snapshot) => {
+                let foundUser = null;
+                if (snapshot.exists()) {
+                    Object.values(snapshot.val()).forEach(u => { if(u.email === email) foundUser = u; });
+                }
+
+                if (foundUser) {
+                    const otp = generateOTP();
+                    const pendingData = { username: foundUser.username, newPassword: newPassword };
+
+                    if (typeof emailjs !== 'undefined') {
+                        emailjs.send(OTP_SERVICE_ID, OTP_TEMPLATE_ID, {
+                            to_email: email, to_name: foundUser.fullname, otp_code: otp, message: "Mã OTP xác thực đổi mật khẩu."
+                        }).then(() => {
+                            openOtpModal(otp, 'forgot_pass', pendingData, email, false);
+                        }).catch(() => {
+                            openOtpModal(otp, 'forgot_pass', pendingData, email, true);
+                        });
+                    } else {
+                        openOtpModal(otp, 'forgot_pass', pendingData, email, true);
+                    }
+                } else {
+                    alert("❌ Email này chưa đăng ký!");
+                }
+            }).finally(() => { btn.innerText = oldText; btn.disabled = false; });
+        }
+    </script>
+</body>
+</html>
